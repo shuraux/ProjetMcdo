@@ -12,5 +12,6 @@ package testprojetmcdo;
 public class C2 {
     public static void main(String[] args) {
         System.out.println("LOL");
+        System.out.println("Vive les tréades !");
     }
 }
