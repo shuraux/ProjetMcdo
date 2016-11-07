@@ -22,16 +22,20 @@ public class PassePlat {
     
     public synchronized void ajouterSandwich(){
         Sandwich sw = new Sandwich();           //on créé un objet Sandwich
-        this.listeSandwichs.add(sw);       //on l'ajoute à notre liste de sandwich du pp
+        this.listeSandwichs.add(sw);        //on l'ajoute à notre liste de sandwich du pp
+        this.notifyAll();
     }
     
     public synchronized void retirerSandwich(){
-        if(this.getListeSandwichs().size()>0){   //si il reste des sandwichs sur le pp
-            this.getListeSandwichs().remove(0);  //on enlève le premier élément (le + vieux)
-        }
-        else{
-            System.out.println("Plus de sandwichs dans le passe plat n: " + this.getNumero());
-        }
+        while (this.listeSandwichs.size() <= 0) {
+                try {
+                    this.wait();
+                    System.out.println("Pas de sandwich dispo sur le passe-plat");
+                } catch (InterruptedException ex) {
+                    throw new Error("pas d'interrupt dans cet exemple");
+                }
+            }
+        this.listeSandwichs.remove(0);
     }
 
     public ArrayList<Sandwich> getListeSandwichs() {
