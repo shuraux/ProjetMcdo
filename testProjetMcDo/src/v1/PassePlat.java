@@ -11,7 +11,7 @@ package v1;
  */
 public class PassePlat {
     private int nbSandwichs;    //le nb de sandwichs dispo dans le passe-plat init à 0
-    private final int numero;
+    private final int numero;   //numéro qui permet d'identifer le pass-plat
     
     public PassePlat(int numero){
         this.nbSandwichs=0;
@@ -26,7 +26,7 @@ public class PassePlat {
     }
     
     public synchronized void ajouterSandwich(){
-        this.nbSandwichs=this.nbSandwichs+1;
+        this.nbSandwichs++;
     }
     
     public synchronized void retirerSandwich(){
