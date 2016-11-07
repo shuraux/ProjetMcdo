@@ -9,20 +9,21 @@ package v1;
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
-public class Producteur implements Runnable{
-   private int numero;
-   private PassePlat passePlat;
+public class Client implements Runnable{
+    private final int numero;
+    private PassePlat passePlat;
     
-    public Producteur(PassePlat passePlat, int numero){
+    public Client(PassePlat passePlat, int numero){
         this.numero=numero;
         this.passePlat=passePlat;
     }
     
     public void run(){
-        for(int i = 0; i < 10; i++){
-            System.out.println("Sandwich créé par le producteur " + numero);
-            passePlat.ajouterSandwich();
+        for(int i = 0; i < 3; i++){
+            System.out.println("Sandwich mangé par le client " + numero);
+            passePlat.retirerSandwich();
             System.out.println(passePlat.getListeSandwichs().size());
         }
     }
+    
 }

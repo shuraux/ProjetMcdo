@@ -34,16 +34,10 @@ public class PassePlat {
         }
     }
 
-    /**
-     * @return the listeSandwichs
-     */
     public ArrayList<Sandwich> getListeSandwichs() {
         return listeSandwichs;
     }
 
-    /**
-     * @return the numero
-     */
     public int getNumero() {
         return numero;
     }
