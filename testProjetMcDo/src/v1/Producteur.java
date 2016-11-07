@@ -10,12 +10,10 @@ package v1;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Producteur implements Runnable{
-    //private float ratio;
    private int numero;
    PassePlat passePlat;
     
     public Producteur(PassePlat passePlat, int numero){
-        //this.ratio=(float)(30.0*Math.random());
         this.numero=numero;
         this.passePlat=passePlat;
     }

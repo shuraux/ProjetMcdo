@@ -11,20 +11,13 @@ package v1;
  */
 public class PassePlat {
     private int nbSandwichs;    //le nb de sandwichs dispo dans le passe-plat init à 0
+    private final int numero;
     
-    public PassePlat(){
+    public PassePlat(int numero){
         this.nbSandwichs=0;
+        this.numero=numero;
     }
     
-    public static void main(String[] args) {
-        PassePlat passePlat = new PassePlat();
-        
-        Thread p1 = new Thread(new Producteur(passePlat, 1));
-        Thread p2 = new Thread(new Producteur(passePlat, 2));
-        p1.start();
-        p2.start();
-    }
-
     /**
      * @return the nbSandwichs
      */
@@ -34,6 +27,15 @@ public class PassePlat {
     
     public synchronized void ajouterSandwich(){
         this.nbSandwichs=this.nbSandwichs+1;
+    }
+    
+    public synchronized void retirerSandwich(){
+        if(this.nbSandwichs>0){
+            this.nbSandwichs=this.nbSandwichs-1;
+        }
+        else{
+            System.out.println("Plus de sandwichs dans le passe plat n: " + this.numero);
+        }
     }
     
 }
