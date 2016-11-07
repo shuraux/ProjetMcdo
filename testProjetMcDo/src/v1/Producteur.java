@@ -22,7 +22,7 @@ public class Producteur implements Runnable{
         for(int i = 0; i < 10; i++){
             System.out.println("Sandwich créé par le producteur " + numero);
             passePlat.ajouterSandwich();
-            System.out.println(passePlat.getNbSandwichs());
+            System.out.println(passePlat.getListeSandwichs().size());
         }
     }
 }

@@ -5,37 +5,47 @@
  */
 package v1;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class PassePlat {
-    private int nbSandwichs;    //le nb de sandwichs dispo dans le passe-plat init à 0
+    private ArrayList<Sandwich> listeSandwichs=null;
     private final int numero;   //numéro qui permet d'identifer le pass-plat
     
     public PassePlat(int numero){
-        this.nbSandwichs=0;
-        this.numero=numero;
-    }
-    
-    /**
-     * @return the nbSandwichs
-     */
-    public synchronized int getNbSandwichs() {
-        return this.nbSandwichs;
+        this.numero=numero; //on donne un id au pp
+        this.listeSandwichs = new ArrayList<>();
     }
     
     public synchronized void ajouterSandwich(){
-        this.nbSandwichs++;
+        Sandwich sw = new Sandwich();           //on créé un objet Sandwich
+        this.listeSandwichs.add(sw);       //on l'ajoute à notre liste de sandwich du pp
     }
     
     public synchronized void retirerSandwich(){
-        if(this.nbSandwichs>0){
-            this.nbSandwichs=this.nbSandwichs-1;
+        if(this.getListeSandwichs().size()>0){   //si il reste des sandwichs sur le pp
+            this.getListeSandwichs().remove(0);  //on enlève le premier élément (le + vieux)
         }
         else{
-            System.out.println("Plus de sandwichs dans le passe plat n: " + this.numero);
+            System.out.println("Plus de sandwichs dans le passe plat n: " + this.getNumero());
         }
+    }
+
+    /**
+     * @return the listeSandwichs
+     */
+    public ArrayList<Sandwich> getListeSandwichs() {
+        return listeSandwichs;
+    }
+
+    /**
+     * @return the numero
+     */
+    public int getNumero() {
+        return numero;
     }
     
 }
