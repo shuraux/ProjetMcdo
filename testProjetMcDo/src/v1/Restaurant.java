@@ -10,6 +10,7 @@ package v1;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
+    private int nbPassePlats;
     
      public static void main(String[] args) {
         PassePlat passePlat1 = new PassePlat(1);

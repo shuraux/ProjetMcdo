@@ -24,6 +24,7 @@ public class PassePlat {
         Sandwich sw = new Sandwich();           //on créé un objet Sandwich
         this.listeSandwichs.add(sw);        //on l'ajoute à notre liste de sandwich du pp
         this.notifyAll();
+        System.out.flush();
     }
     
     public synchronized void retirerSandwich(){
