@@ -31,6 +31,7 @@ public class PassePlat {
                 try {
                     this.wait();
                     System.out.println("Pas de sandwich dispo sur le passe-plat");
+                    System.out.flush();
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
