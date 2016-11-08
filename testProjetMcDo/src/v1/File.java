@@ -37,13 +37,13 @@ public class File implements Runnable{
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         }
-        this.listeClients.remove(0);        //le client va partir
         System.out.println("Le client n°" + this.listeClients.get(0).getNumero() + " est parti");
+        this.listeClients.remove(0);        //le client va partir
         System.out.println("Il reste " + this.passePlat.getListeSandwichs().size() + " sandwichs sur le passe-plat");
         }
     
     public void run(){
-        if(this.listeClients.isEmpty()==false){
+        while(this.listeClients.isEmpty()==false){
             try {
                 Thread.sleep(this.listeClients.get(0).dureeConso(
                         this.listeClients.get(0).getTempsConsoMin(), this.listeClients.get(0).getTempsConsoMax()));
