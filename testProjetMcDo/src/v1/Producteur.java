@@ -33,7 +33,7 @@ public class Producteur implements Runnable{
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
-            System.out.println("Sandwich créé par le producteur " + numero);
+            System.out.println("Sandwich créé par le producteur n°" + numero);
             passePlat.ajouterSandwich();
             System.out.println(passePlat.getListeSandwichs().size());
         }

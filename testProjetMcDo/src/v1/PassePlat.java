@@ -36,7 +36,7 @@ public class PassePlat {
                 }
             }
         this.listeSandwichs.remove(0);
-    }
+        }
 
     public ArrayList<Sandwich> getListeSandwichs() {
         return listeSandwichs;
