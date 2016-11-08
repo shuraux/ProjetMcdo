@@ -3,7 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1;
+package v1_1.employe;
+
+import v1_1.PassePlat;
+import v1_1.employe.Employe;
 
 /**
  *
