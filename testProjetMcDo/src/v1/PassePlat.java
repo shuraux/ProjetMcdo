@@ -36,6 +36,7 @@ public class PassePlat {
                 }
             }
         this.listeSandwichs.remove(0);
+        System.out.println("Sandwich retiré du passe-plat");
         }
 
     public ArrayList<Sandwich> getListeSandwichs() {
