@@ -5,7 +5,6 @@
  */
 package v1_1.employe;
 
-import v1.Sandwich;
 import v1_1.Stock;
 
 /**
@@ -15,7 +14,7 @@ import v1_1.Stock;
 public class Serveur extends Employe implements Runnable{
     private Stock stock;
     private String choix;
-    private int dureeCommande=7;
+    private int dureeDechargement=7;
     
     public Serveur(Stock stock, int numero){
         this.stock=stock;
@@ -36,14 +35,10 @@ public class Serveur extends Employe implements Runnable{
         }
     }
     
-    public synchronized void service(Sandwich sw){
-        
-    }
-    
     public void run(){
         for(int i=0; i<5; i++){
             try {
-                Thread.sleep(dureeCommande);
+                Thread.sleep(dureeDechargement);
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
@@ -52,7 +47,7 @@ public class Serveur extends Employe implements Runnable{
         }
         for(int i=0; i<5; i++){
             try {
-                Thread.sleep(dureeCommande);
+                Thread.sleep(dureeDechargement);
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
@@ -60,11 +55,5 @@ public class Serveur extends Employe implements Runnable{
             System.out.println("Burger retiré du stock. Il reste " + stock.getListeBurgers().size() + " burgers dans le stock");
         }
     }
-
-    /**
-     * @return the dureeCommande
-     */
-    public int getDureeCommande() {
-        return dureeCommande;
-    }
+    
 }

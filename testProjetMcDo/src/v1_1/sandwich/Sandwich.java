@@ -11,10 +11,13 @@ package v1_1.sandwich;
  */
 public class Sandwich {
     protected int prodSimultMax;
-    protected int tempsFabrication[]=new int[prodSimultMax];
     protected int coutFabrication, prixVente, tempsPeremption;
     
-    public Sandwich(){
+    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, int tempsPeremption){
+        this.coutFabrication=coutFabrication;
+        this.prixVente=prixVente;
+        this.tempsPeremption=tempsPeremption;
+        this.prodSimultMax=prodSimultMax;
     }
     
 }

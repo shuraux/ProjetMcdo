@@ -16,15 +16,12 @@ package v1_1.sandwich;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Kebab extends Sandwich{
-    private int prodSimultMax=2;
-    private long tempsFabrication[]=new long[prodSimultMax];
+    private int[] tempsFabrication= new int[prodSimultMax];
 
-    
     public Kebab(){
+        super(2, 30, 60, 500);
         this.tempsFabrication[0]=10;
         this.tempsFabrication[1]=15;
-        this.coutFabrication=30;
-        this.prixVente=60;
     }
     
     public boolean isKebab(){
@@ -32,16 +29,10 @@ public class Kebab extends Sandwich{
     }
 
     /**
-     * @return the prodSimultMax
-     */
-    public int getProdSimultMax() {
-        return prodSimultMax;
-    }
-
-    /**
      * @return the tempsFabrication
      */
-    public long[] getTempsFabrication() {
+    public int[] getTempsFabrication() {
         return tempsFabrication;
     }
+    
 }
