@@ -13,6 +13,6 @@ public class Employe {
    protected int numero;
    
    public Employe(){
-       
    }
+   
 }

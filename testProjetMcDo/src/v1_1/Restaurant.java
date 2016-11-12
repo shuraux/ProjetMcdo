@@ -6,13 +6,14 @@
 package v1_1;
 
 import v1_1.employe.Producteur;
+import v1_1.employe.Serveur;
 
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
-    private int nbPassePlats;
+    private int nbrCaisses, nbrEmployes;
     
      public static void main(String[] args) {
         /*PassePlat passePlat1 = new PassePlat(1);
@@ -24,11 +25,15 @@ public class Restaurant {
         
         Stock stock = new Stock();
         
-        Thread p1 = new Thread(new Producteur(stock, 1, 50, 100));
-        Thread p2 = new Thread(new Producteur(stock, 2, 45, 60));
+        Thread p1 = new Thread(new Producteur(stock, 1));
+        Thread p2 = new Thread(new Producteur(stock, 2));
+        Thread s1 = new Thread(new Serveur(stock, 1));
+        Thread s2 = new Thread(new Serveur(stock, 2));
        /* Thread f = new Thread(file);
         f.start();*/
         p1.start();
         p2.start();
+        s1.start();
+        s2.start();
     }
 }

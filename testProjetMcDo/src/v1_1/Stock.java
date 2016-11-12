@@ -16,6 +16,7 @@ import v1_1.sandwich.Kebab;
 public class Stock {
     private ArrayList<Burger> listeBurgers;
     private ArrayList<Kebab> listeKebabs;
+    private final int stockMax=35;
     
     public Stock(){
         this.listeBurgers = new ArrayList<>();
@@ -23,23 +24,30 @@ public class Stock {
     }
     
     public synchronized void ajouterBurger(Burger bg){
-        if (bg.isBurger()==true){
-            this.listeBurgers.add(bg);        //on ajoute le dwich à la liste de burgers du stock
+        while (bg.isBurger()==true && this.listeBurgers.size()+this.listeKebabs.size()==stockMax) {
+            try {
+                System.out.println("Stock plein");
+                this.wait();
+                System.out.flush();
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
         }
+        this.listeBurgers.add(bg);        //on ajoute le dwich à la liste de burgers du stock
         this.notifyAll();
         System.out.flush();
     }
     
     public synchronized void retirerBurger(){
         while (this.listeBurgers.size() <= 0) {
-                try {
-                    this.wait();
-                    System.out.println("Pas de burger dispo dans le stock");
-                    System.out.flush();
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
+            try {
+                this.wait();
+                System.out.println("Pas de burger dispo dans le stock");
+                System.out.flush();
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
             }
+        }
         this.listeBurgers.remove(0);
         System.out.println("Burger retiré du stock");
         }
@@ -49,9 +57,16 @@ public class Stock {
     }
     
     public synchronized void ajouterKebab(Kebab kb){
-        if (kb.isKebab()==true){
-            this.listeKebabs.add(kb);        //on ajoute le dwich à la liste de burgers du stock
+        while (kb.isKebab()==true && this.listeBurgers.size()+this.listeKebabs.size()==stockMax) {
+            try {
+                System.out.println("Stock plein");
+                this.wait();
+                System.out.flush();
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
         }
+        this.listeKebabs.add(kb);        //on ajoute le dwich à la liste de burgers du stock
         this.notifyAll();
         System.out.flush();
     }

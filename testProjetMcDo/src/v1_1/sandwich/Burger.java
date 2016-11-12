@@ -17,7 +17,7 @@ package v1_1.sandwich;
  */
     public class Burger extends Sandwich{   //correspond à s ds le sujet
     private int prodSimultMax=3;
-    private int tempsFabrication[]=new int[prodSimultMax];
+    private long tempsFabrication[]=new long[prodSimultMax];
         
     public Burger(){
         this.tempsFabrication[0]=8;
@@ -29,5 +29,19 @@ package v1_1.sandwich;
     
     public boolean isBurger(){
         return true;
+    }
+
+    /**
+     * @return the prodSimultMax
+     */
+    public int getProdSimultMax() {
+        return prodSimultMax;
+    }
+
+    /**
+     * @return the tempsFabrication
+     */
+    public long[] getTempsFabrication() {
+        return tempsFabrication;
     }
 }

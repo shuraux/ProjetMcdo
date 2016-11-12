@@ -17,7 +17,7 @@ package v1_1.sandwich;
  */
 public class Kebab extends Sandwich{
     private int prodSimultMax=2;
-    private int tempsFabrication[]=new int[prodSimultMax];
+    private long tempsFabrication[]=new long[prodSimultMax];
 
     
     public Kebab(){
@@ -29,5 +29,19 @@ public class Kebab extends Sandwich{
     
     public boolean isKebab(){
         return true;
+    }
+
+    /**
+     * @return the prodSimultMax
+     */
+    public int getProdSimultMax() {
+        return prodSimultMax;
+    }
+
+    /**
+     * @return the tempsFabrication
+     */
+    public long[] getTempsFabrication() {
+        return tempsFabrication;
     }
 }
