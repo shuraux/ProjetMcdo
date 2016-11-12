@@ -15,17 +15,19 @@ public class Restaurant {
     private int nbPassePlats;
     
      public static void main(String[] args) {
-        PassePlat passePlat1 = new PassePlat(1);
+        /*PassePlat passePlat1 = new PassePlat(1);
         Client c0 = new Client(0, 40, 100);
         Client c1 = new Client(1, 70, 120);
         File file = new File(3, passePlat1);
         file.ajouterClient(c0);
-        file.ajouterClient(c1);
+        file.ajouterClient(c1);*/
         
-        Thread p1 = new Thread(new Producteur(passePlat1, 1, 50, 100));
-        Thread p2 = new Thread(new Producteur(passePlat1, 2, 45, 60));
-        Thread f = new Thread(file);
-        f.start();
+        Stock stock = new Stock();
+        
+        Thread p1 = new Thread(new Producteur(stock, 1, 50, 100));
+        Thread p2 = new Thread(new Producteur(stock, 2, 45, 60));
+       /* Thread f = new Thread(file);
+        f.start();*/
         p1.start();
         p2.start();
     }

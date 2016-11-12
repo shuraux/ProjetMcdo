@@ -5,39 +5,67 @@
  */
 package v1_1.employe;
 
-import v1_1.PassePlat;
-import v1_1.employe.Employe;
+import v1.Sandwich;
+import v1_1.Stock;
+import v1_1.sandwich.Burger;
+import v1_1.sandwich.Kebab;
 
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Producteur extends Employe implements Runnable{
-   private PassePlat passePlat;
-   private long tempsProdMin, tempsProdMax;
+    private Stock stock;
+    private long tempsProdMin, tempsProdMax;
     
-    public Producteur(PassePlat passePlat, int numero, long tempsProdMin, long tempsProdMax){
+    public Producteur(Stock stock, int numero, long tempsProdMin, long tempsProdMax){
         this.numero=numero;
-        this.passePlat=passePlat;
         this.tempsProdMin=tempsProdMin;
         this.tempsProdMax=tempsProdMax;
+        this.stock=stock;
     }
     
-    public synchronized long dureeProd(long tempsProdMin, long tempsProdMax){
+    public synchronized Kebab prodKebab(){
+        Kebab kb = new Kebab();
+        return kb;
+    }
+    
+    public synchronized long dureeProdKebab(long tempsProdMin, long tempsProdMax){
+        long delta = tempsProdMax - tempsProdMin;
+        return tempsProdMin + (long) (Math.random() * (delta +1));
+    }
+    
+    public synchronized Burger prodBurger(){
+        Burger bg = new Burger();
+        return bg;
+    }
+    
+    public synchronized long dureeProdBurger(long tempsProdMin, long tempsProdMax){
         long delta = tempsProdMax - tempsProdMin;
         return tempsProdMin + (long) (Math.random() * (delta +1));
     }
     
     public void run(){
-        for(int i = 0; i < 10; i++){
+        for(int i=0; i<10; i++){
             try {
-                    Thread.sleep(dureeProd(tempsProdMin, tempsProdMax));
+                    Thread.sleep(dureeProdKebab(tempsProdMin, tempsProdMax));
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
-            System.out.println("Sandwich créé par le producteur n°" + numero);
-            passePlat.ajouterSandwich();
-            System.out.println(passePlat.getListeSandwichs().size());
+            System.out.println("Kebab créé par le producteur n°" + numero);
+            stock.ajouterKebab(prodKebab());
+            System.out.println("Il y a " + stock.getListeKebabs().size() + " kebabs dans le stock");
+        }
+        
+        for(int i=0; i<10; i++){
+            try {
+                    Thread.sleep(dureeProdBurger(tempsProdMin, tempsProdMax));
+                } catch (InterruptedException ex) {
+                    throw new Error("pas d'interrupt dans cet exemple");
+                }
+            System.out.println("Burger créé par le producteur n°" + numero);
+            stock.ajouterBurger(prodBurger());
+            System.out.println("Il y a " + stock.getListeBurgers().size() + " burgers dans le stock");
         }
     }
 }

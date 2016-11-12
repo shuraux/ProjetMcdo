@@ -23,4 +23,8 @@ import v1.Sandwich;
         this.coutFabrication=20;
         this.prixVente=50;
     }
+
+    public boolean isBurger() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
