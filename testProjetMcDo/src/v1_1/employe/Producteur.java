@@ -41,20 +41,8 @@ public class Producteur extends Employe implements Runnable{
                 throw new Error("pas d'interrupt dans cet exemple");
             }
             System.out.println("Kebab créé par le producteur n°" + numero);
-            stock.ajouterKebab(kebab);  //ajoute le kebab si le stock n'est pas plein, sinon attend
-            System.out.println("Il y a " + stock.getListeKebabs().size() + " kebabs dans le stock");
-        }
-        
-        for(int i=0; i<10; i++){
-            Burger burger=prodBurger();
-            try {
-                Thread.sleep(burger.getTempsFabrication()[0]);
-            } catch (InterruptedException ex) {
-                throw new Error("pas d'interrupt dans cet exemple");
-            }
-            System.out.println("Burger créé par le producteur n°" + numero);
-            stock.ajouterBurger(burger);
-            System.out.println("Il y a " + stock.getListeBurgers().size() + " burgers dans le stock");
+            stock.ajouterSandwich(kebab);  //ajoute le kebab si le stock n'est pas plein, sinon attend
+            System.out.println("Il y a " + stock.getListeSandwichs().size() + " kebabs dans le stock");
         }
     }
 }
