@@ -42,8 +42,7 @@ public class File implements Runnable{
     public void run(){
         while(this.listeClients.isEmpty()==false){
             try {
-                Thread.sleep(this.listeClients.get(0).dureeConso(
-                        this.listeClients.get(0).getTempsConsoMin(), this.listeClients.get(0).getTempsConsoMax()));
+                Thread.sleep(25);
             } catch (InterruptedException ex) {
                 throw new Error("pas d'interrupt dans cet exemple");
             }

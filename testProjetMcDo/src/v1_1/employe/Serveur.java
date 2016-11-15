@@ -5,6 +5,7 @@
  */
 package v1_1.employe;
 
+import v1_1.PassePlat;
 import v1_1.Stock;
 
 /**
@@ -13,8 +14,9 @@ import v1_1.Stock;
  */
 public class Serveur extends Employe implements Runnable{
     private Stock stock;
+    private PassePlat passeplat;
     private String choix;
-    private int dureeDechargement=7;
+    private final int dureeDechargement=7;
     
     public Serveur(Stock stock, int numero){
         this.stock=stock;

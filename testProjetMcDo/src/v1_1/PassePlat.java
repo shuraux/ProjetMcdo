@@ -5,8 +5,7 @@
  */
 package v1_1;
 
-import v1_1.sandwich.Sandwich;
-import java.util.ArrayList;
+import v1_1.sandwich.Burger;
 
 /**
  *
@@ -17,6 +16,10 @@ public class PassePlat {
     
     public PassePlat(int numero){
         this.numero=numero; //on donne un id au pp
+    }
+    
+    public synchronized void ajouterBurger(Burger bg){
+        
     }
     
     public int getNumero() {

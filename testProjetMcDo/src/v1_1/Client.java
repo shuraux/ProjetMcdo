@@ -5,35 +5,29 @@
  */
 package v1_1;
 
+import java.util.ArrayList;
+import v1.Sandwich;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Client {
     private final int numero;
-    private long tempsConsoMin, tempsConsoMax;
+    private ArrayList<Sandwich> commande = new ArrayList<>();
     
-    public Client(int numero, long tempsConsoMin, long tempsConsoMax){
+    public Client(int numero){
         this.numero=numero;
-        this.tempsConsoMin=tempsConsoMin;
-        this.tempsConsoMax=tempsConsoMax;
-    }
-    
-    public synchronized long dureeConso(long tempsConsoMin, long tempsConsoMax){
-        long delta = tempsConsoMax - tempsConsoMin;
-        return tempsConsoMin + (long) (Math.random() * (delta +1));
     }
 
     public int getNumero() {
         return numero;
     }
-
-    public long getTempsConsoMin() {
-        return tempsConsoMin;
-    }
-
-    public long getTempsConsoMax() {
-        return tempsConsoMax;
+    
+    public void genererCommande(ArrayList<Sandwich> listeCommande){
+        for(int i=0; i<listeCommande.size(); i++){
+            this.commande.add(listeCommande.get(i));
+        }
     }
     
 }
