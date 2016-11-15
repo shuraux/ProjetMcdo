@@ -37,22 +37,23 @@ public class Serveur extends Employe implements Runnable{
         }
     }
     
+    @Override
     public void run(){
         for(int i=0; i<5; i++){
             try {
                 Thread.sleep(dureeDechargement);
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
             this.stock.retirerKebab();
             System.out.println("Kebab retiré du stock. Il reste " + stock.getListeKebabs().size() + " kebabs dans le stock");
         }
         for(int i=0; i<5; i++){
             try {
                 Thread.sleep(dureeDechargement);
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
             this.stock.retirerBurger();
             System.out.println("Burger retiré du stock. Il reste " + stock.getListeBurgers().size() + " burgers dans le stock");
         }

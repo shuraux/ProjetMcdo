@@ -31,14 +31,15 @@ public class Producteur extends Employe implements Runnable{
         return bg;
     }
     
+    @Override
     public void run(){
         for(int i=0; i<10; i++){
             Kebab kebab=prodKebab();
             try {
                 Thread.sleep(kebab.getTempsFabrication()[0]);
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
             System.out.println("Kebab créé par le producteur n°" + numero);
             stock.ajouterKebab(kebab);  //ajoute le kebab si le stock n'est pas plein, sinon attend
             System.out.println("Il y a " + stock.getListeKebabs().size() + " kebabs dans le stock");
@@ -48,9 +49,9 @@ public class Producteur extends Employe implements Runnable{
             Burger burger=prodBurger();
             try {
                 Thread.sleep(burger.getTempsFabrication()[0]);
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
             System.out.println("Burger créé par le producteur n°" + numero);
             stock.ajouterBurger(burger);
             System.out.println("Il y a " + stock.getListeBurgers().size() + " burgers dans le stock");

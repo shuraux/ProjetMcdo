@@ -16,5 +16,6 @@ public class Sandwich {
     
     public Sandwich(){
     }
+    // On pourrait utiliser le constructeur de la classe Sandwich (ci-dessus, actuellement vide) pour créer le kebab et le burger
     
 }

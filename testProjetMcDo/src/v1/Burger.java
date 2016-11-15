@@ -1,7 +1,7 @@
 package v1;
 
 
-import v1.Sandwich;
+import v1.Sandwich; // G : Idem que la classe Kebab
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,7 +24,7 @@ import v1.Sandwich;
         this.prixVente=50;
     }
 
-    public boolean isBurger() {
+    public boolean isBurger() { // G : Méthode normale dont le paramètre implicite this est de type Burger, renvoie un résultat de type boolean
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

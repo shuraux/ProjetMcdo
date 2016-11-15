@@ -1,7 +1,8 @@
 package v1;
 
 
-import v1.Sandwich;
+import v1.Sandwich; // G : Utile ? Les classes Kebab et Sandwich sont dans le même package. 
+// G : En fait, la classe Kebab est juste un instance de la classe Sandwich, un cas particulier de la classe Sandwich
 
 /*
  * To change this license header, choose License Headers in Project Properties.

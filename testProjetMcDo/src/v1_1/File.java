@@ -17,7 +17,7 @@ public class File implements Runnable{
     private PassePlat passePlat;
     
     public File(int longueur, PassePlat passePlat){
-        this.longueur=longueur;         //on prend la longueur max de la file en entrée
+        this.longueur=longueur;        //on prend la longueur max de la file en entrée
         this.passePlat=passePlat;
         this.listeClients = new ArrayList<>();
     }
@@ -31,14 +31,15 @@ public class File implements Runnable{
     public synchronized void retirerClient(){
         while (this.listeClients.size() <= 0) {
             try {
+                System.out.println("File d'attente vide");
                 this.wait();
-                 System.out.println("File d'attente vide");
             } catch (InterruptedException ex) {
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         }
-        }
+    }
     
+    @Override
     public void run(){
         while(this.listeClients.isEmpty()==false){
             try {
