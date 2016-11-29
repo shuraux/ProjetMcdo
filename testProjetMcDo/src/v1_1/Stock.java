@@ -23,6 +23,7 @@ public class Stock {
     }
     
     public synchronized void ajouterSandwich(Sandwich sw){
+        //System.out.println("check entrée ajouterSandwich");
         while (this.getListeSandwichs().size()==getStockMax()){
             try {
                 System.out.println("Stock plein");
@@ -33,13 +34,14 @@ public class Stock {
             }
         }
         this.listeSandwichs.add(sw);
+        //System.out.println("check sortie ajouterSandwich");
         this.notifyAll();
         System.out.flush();
     }
     
-    public synchronized void retirerSandwich(String choix){
-        if(choix=="burger"){
-            while (this.listeSandwichs.size() <= 0) {   //tant que le stock est vide
+    public synchronized Sandwich retirerSandwich(String nom){
+        Sandwich sandwichRetire=null;
+        while (this.listeSandwichs.size() <= 0) {   //tant que le stock est vide
                 try {
                     System.out.println("Stock vide");
                     this.wait();                        //le thread va attendre
@@ -47,10 +49,12 @@ public class Stock {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
             }
+        if("burger".equals(nom)){
             int i=0;
             boolean retire=false;
             while(retire==false){
                 if(this.listeSandwichs.get(i) instanceof Burger){   //si l'element checké est un Burger
+                    sandwichRetire=this.listeSandwichs.get(i);      //on récup le sandwich à mettre dans le passe plat
                     this.listeSandwichs.remove(i);                  //on l'enlève
                     System.out.println("Burger retiré du stock");
                     retire=true;                                    //on sort du while
@@ -60,29 +64,25 @@ public class Stock {
                 }
                 else i++;               //sinon on incrémente i
             }
+            return sandwichRetire;      //on renvoie le sandwich retiré qui sera mis sur le passeplat
         }
         
-        if(choix=="kebab)"){
-            while (this.getListeSandwichs().size() <= 0) {
-                try {
-                    System.out.println("Stock vide");
-                    this.wait();
-                    System.out.flush();
-                } catch (InterruptedException ex) {
-                    throw new Error("pas d'interrupt dans cet exemple");
-                }
-            }
+        if("kebab".equals(nom)){
             int i=0;
             boolean retire=false;
             while(retire==false){
                 if(this.listeSandwichs.get(i) instanceof Kebab){
+                    sandwichRetire=this.listeSandwichs.get(i);
                     this.listeSandwichs.remove(i);
-                    System.out.println("Kebab retiré du stock");
+                    //System.out.println("Kebab retiré du stock");
                     retire=true;
                 }
                 i++;
             }
+            return sandwichRetire;
         }
+        
+        else return sandwichRetire;
     }
     
     public int getNbrKebabs(){

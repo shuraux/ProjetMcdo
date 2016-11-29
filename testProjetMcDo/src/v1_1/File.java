@@ -11,14 +11,12 @@ import java.util.ArrayList;
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
-public class File implements Runnable{
+public class File{
     private int longueur;
     private ArrayList<Client> listeClients=null;
-    private PassePlat passePlat;
     
-    public File(int longueur, PassePlat passePlat){
+    public File(int longueur){
         this.longueur=longueur;        //on prend la longueur max de la file en entrée
-        this.passePlat=passePlat;
         this.listeClients = new ArrayList<>();
     }
     
@@ -37,19 +35,10 @@ public class File implements Runnable{
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         }
+        this.listeClients.remove(0);
+        System.out.println("Client servi et parti");
     }
     
-    @Override
-    public void run(){
-        while(this.listeClients.isEmpty()==false){
-            try {
-                Thread.sleep(25);
-            } catch (InterruptedException ex) {
-                throw new Error("pas d'interrupt dans cet exemple");
-            }
-        }
-    }
-
     public int getLongueur() {
         return longueur;
     }
@@ -57,8 +46,5 @@ public class File implements Runnable{
     public ArrayList<Client> getListeClients() {
         return listeClients;
     }
-
-    public PassePlat getPassePlat() {
-        return passePlat;
-    }
+    
 }

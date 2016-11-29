@@ -12,12 +12,21 @@ package v1_1.sandwich;
 public class Sandwich {
     protected int prodSimultMax;
     protected int coutFabrication, prixVente, tempsPeremption;
+    protected String nom;
     
     public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, int tempsPeremption){
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
         this.tempsPeremption=tempsPeremption;
         this.prodSimultMax=prodSimultMax;
+        this.nom="sandwich";
+    }
+
+    /**
+     * @return the nom
+     */
+    public String getNom() {
+        return nom;
     }
     
 }

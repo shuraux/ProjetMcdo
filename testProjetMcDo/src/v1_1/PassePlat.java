@@ -5,7 +5,8 @@
  */
 package v1_1;
 
-import v1_1.sandwich.Burger;
+import java.util.ArrayList;
+import v1_1.sandwich.Sandwich;
 
 /**
  *
@@ -13,17 +14,39 @@ import v1_1.sandwich.Burger;
  */
 public class PassePlat {
     private final int numero;   //numéro qui permet d'identifer le passe-plat
+    private final ArrayList<Sandwich> sandwichsPp;
+    private boolean commandeComplete;
+    private File file;
     
-    public PassePlat(int numero){
+    public PassePlat(int numero, File file){
         this.numero=numero; //on donne un id au pp
+        this.file=file;
+        this.sandwichsPp = new ArrayList<>();
     }
     
-    public synchronized void ajouterBurger(Burger bg){
-        
+    public synchronized void ajouterSandwichPp(Sandwich sw){
+        this.sandwichsPp.add(sw);
+        System.out.println("Sandwich ajouté au passe-plat");
+        this.notifyAll();
+        System.out.flush();
     }
     
     public int getNumero() {
         return numero;
+    }
+
+    /**
+     * @return the commandeComplete
+     */
+    public boolean isCommandeComplete() {
+        return commandeComplete;
+    }
+
+    /**
+     * @return the file
+     */
+    public File getFile() {
+        return file;
     }
     
 }

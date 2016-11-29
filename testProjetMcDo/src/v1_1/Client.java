@@ -6,7 +6,7 @@
 package v1_1;
 
 import java.util.ArrayList;
-import v1.Sandwich;
+import v1_1.sandwich.Sandwich;
 
 /**
  *
@@ -16,18 +16,20 @@ public class Client {
     private final int numero;
     private ArrayList<Sandwich> commande = new ArrayList<>();
     
-    public Client(int numero){
+    public Client(int numero, ArrayList<Sandwich> commande){
         this.numero=numero;
+        this.commande=commande;
     }
 
     public int getNumero() {
         return numero;
     }
-    
-    public void genererCommande(ArrayList<Sandwich> listeCommande){
-        for(int i=0; i<listeCommande.size(); i++){
-            this.commande.add(listeCommande.get(i));
-        }
+
+    /**
+     * @return the commande
+     */
+    public ArrayList<Sandwich> getCommande() {
+        return commande;
     }
     
 }

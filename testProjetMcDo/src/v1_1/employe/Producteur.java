@@ -33,7 +33,7 @@ public class Producteur extends Employe implements Runnable{
     
     @Override
     public void run(){
-        for(int i=0; i<10; i++){
+        for(int i=0; i<4; i++){
             Kebab kebab=prodKebab();
             try {
                 Thread.sleep(kebab.getTempsFabrication()[0]);
@@ -45,7 +45,7 @@ public class Producteur extends Employe implements Runnable{
             System.out.println("Il y a " + stock.getNbrKebabs() + " kebabs dans le stock");
         }
         
-        for(int i=0; i<10; i++){
+        for(int i=0; i<4; i++){
             Burger burger=prodBurger();
             try {
                 Thread.sleep(burger.getTempsFabrication()[0]);

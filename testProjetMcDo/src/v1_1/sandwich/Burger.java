@@ -17,6 +17,7 @@ public class Burger extends Sandwich{   //correspond à s ds le sujet
         this.tempsFabrication[0]=8;
         this.tempsFabrication[1]=14;
         this.tempsFabrication[2]=18;
+        this.nom="burger";
     }
     
     public boolean isBurger(){
