@@ -27,9 +27,21 @@ public class Serveur extends Employe implements Runnable{
     }
     
     @Override
-    public void run(){
+    public synchronized void run(){
         Sandwich swCommande;
+        boolean fileVide;
         while(true){
+            if(this.passePlat.getFile().getListeClients().isEmpty()){
+                try {
+                    System.out.println("File d'attente vide");
+                    fileVide=true;
+                    this.wait();                        //le thread va attendre
+                } catch (InterruptedException ex) {
+                    throw new Error("pas d'interrupt dans cet exemple");
+                }
+            }
+            else fileVide=false;
+            
             for(int i=0; i<this.passePlat.getFile().getListeClients().get(0).getCommande().size(); i++){
                                 //on est dans le for tant qu'on a pas fini la commande
                 try {
@@ -50,20 +62,6 @@ public class Serveur extends Employe implements Runnable{
             this.passePlat.getFile().retirerClient();   //on retire le client via la méthode dans File
         }
      }
-        /*for(int i=0; i<5; i++){
-            try {
-                Thread.sleep(dureeDechargement);
-            } catch (InterruptedException ex) {
-                throw new Error("pas d'interrupt dans cet exemple");
-            }
-            swCommande=this.stock.retirerSandwich("burger");
-            System.out.println("Burger retiré du stock. Il reste " + stock.getNbrBurgers() + " burgers dans le stock");
-            
-            boolean check=passePlat.checkCommande();
-            if(check==true){
-                passePlat.ajouterSandwichPp(swCommande);
-            }
-        }*/
 }
     
 

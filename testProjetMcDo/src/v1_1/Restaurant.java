@@ -26,7 +26,7 @@ public class Restaurant {
         ArrayList<Sandwich> com0=new ArrayList<>(); //création de la liste de commande du client 0
         com0.add(kb);
         com0.add(kb);
-        com0.add(kb);
+        com0.add(bg);
         
         ArrayList<Sandwich> com1=new ArrayList<>(); //pareil pour le client 1
         com1.add(bg);
