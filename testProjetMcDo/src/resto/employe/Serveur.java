@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1_1.employe;
+package resto.employe;
 
-import v1_1.PassePlat;
-import v1_1.Stock;
-import v1_1.sandwich.Burger;
-import v1_1.sandwich.Kebab;
-import v1_1.sandwich.Sandwich;
+import resto.PassePlat;
+import resto.Stock;
+import resto.sandwich.Burger;
+import resto.sandwich.Kebab;
+import resto.sandwich.Sandwich;
 
 /**
  *

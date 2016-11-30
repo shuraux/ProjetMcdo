@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1_1.employe;
+package resto.employe;
 
-import v1_1.Stock;
-import v1_1.sandwich.Burger;
-import v1_1.sandwich.Kebab;
+import resto.Stock;
+import resto.sandwich.Burger;
+import resto.sandwich.Kebab;
 
 /**
  *
@@ -33,7 +33,7 @@ public class Producteur extends Employe implements Runnable{
     
     @Override
     public void run(){
-        for(int i=0; i<10; i++){
+        for(int i=0; i<2; i++){
             Kebab kebab=prodKebab();
             try {
                 Thread.sleep(kebab.getTempsFabrication()[0]);
@@ -45,7 +45,7 @@ public class Producteur extends Employe implements Runnable{
             System.out.println("Il y a " + stock.getNbrKebabs() + " kebabs dans le stock");
         }
         
-        for(int i=0; i<10; i++){
+        for(int i=0; i<3; i++){
             Burger burger=prodBurger();
             try {
                 Thread.sleep(burger.getTempsFabrication()[0]);

@@ -3,23 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1_1.sandwich;
+package resto.sandwich;
 
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
-public class Kebab extends Sandwich{
+public class Burger extends Sandwich{   //correspond à s ds le sujet
     private int[] tempsFabrication= new int[prodSimultMax];
 
-    public Kebab(){
-        super(2, 30, 60, 500);
-        this.tempsFabrication[0]=10;
-        this.tempsFabrication[1]=15;
-        this.nom="kebab";
+    public Burger(){
+        super(3, 20, 50, 500);
+        this.tempsFabrication[0]=8;
+        this.tempsFabrication[1]=14;
+        this.tempsFabrication[2]=18;
+        this.nom="burger";
     }
     
-    public boolean isKebab(){
+    public boolean isBurger(){
         return true;
     }
 

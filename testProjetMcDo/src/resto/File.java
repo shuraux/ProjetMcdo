@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package v1_1;
+package resto;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class File{
             }
         }
         this.listeClients.remove(0);
-        System.out.println("Client servi et parti");
+        System.out.println("Client servi et parti\n");
     }
     
     public int getLongueur() {
