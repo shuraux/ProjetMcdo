@@ -20,21 +20,11 @@ public class Restaurant {
     private int nbrCaisses, nbrEmployes;
     
      public static void main(String[] args) {
-        Kebab kb = new Kebab();
-        Burger bg = new Burger();
         
-        ArrayList<Sandwich> com0=new ArrayList<>(); //création de la liste de commande du client 0
-        com0.add(kb);
-        com0.add(kb);
-        com0.add(bg);
-        
-        ArrayList<Sandwich> com1=new ArrayList<>(); //pareil pour le client 1
-        com1.add(bg);
-        com1.add(bg);
-        com1.add(kb);
-        
-        Client c0 = new Client(0, com0);    //on crée les clients
-        Client c1 = new Client(1, com1);
+        Client c0 = new Client(0);    //on crée les clients
+        c0.getCommande().toString();
+        Client c1 = new Client(1);
+        c1.getCommande().toString();
         
         File file = new File(3);
         file.ajouterClient(c0);
@@ -42,7 +32,6 @@ public class Restaurant {
         
         PassePlat passePlat1 = new PassePlat(1, file);
 
-        
         Stock stock = new Stock();
         
         Thread p1 = new Thread(new Producteur(stock, 1));
