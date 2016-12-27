@@ -64,11 +64,11 @@ public class Serveur extends Employe implements Runnable{
                         Burger bg = new Burger();
                         for(int i=0; i<res.length; i++){
                             if(res[i]==0){
-                                System.out.println("conversion 0 en kebab");
+                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
                                 commande.add(new Kebab());      //on convertit un 0 en kebab
                             }
                             else {
-                                System.out.println("conversion 1 en burger");
+                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
                                 commande.add(new Burger());     //et un 1 en burger
                             }
                         }
@@ -77,16 +77,17 @@ public class Serveur extends Employe implements Runnable{
                                 //on est dans le for tant qu'on a pas fini la commande
                             swCommande=this.stock.retirerSandwich(commande.get(i));
                             if(swCommande instanceof Kebab){
-                                System.out.println("Kebab retiré du stock. Il reste " + stock.getNbrKebabs() + " kebabs dans le stock");
+                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() + " kebabs dans le stock");
                             }
                             else if(swCommande instanceof Burger){
-                                System.out.println("Burger retiré du stock. Il reste " + stock.getNbrBurgers()+ " burgers dans le stock");
+                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+ " burgers dans le stock");
                             }
                             this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
                         }
                         
                         System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero +
                             " sert le client n°" + client + "\n");
+                        commande.clear();
                     }
                 }
             }

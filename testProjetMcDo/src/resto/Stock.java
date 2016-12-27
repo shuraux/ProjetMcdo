@@ -19,7 +19,7 @@ public class Stock {
     private ArrayList<Sandwich> listeSandwichs;
     private final int stockMax=100;
     private boolean posAjout, posRetir;
-    private final int dureeChargement=5, dureeDechargement=3;
+    private final int dureeChargement=500, dureeDechargement=300;
     private SimulationClock clock;
     
     public Stock(SimulationClock clock){
@@ -34,7 +34,7 @@ public class Stock {
         while (this.getListeSandwichs().size()==getStockMax() || this.posAjout==false){
             if(this.getListeSandwichs().size()==getStockMax()){ //si le stock est plein
                 try {
-                    System.out.println("Stock plein");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Stock plein");
                     this.wait();                                //on attend
                     System.out.flush();
                 } catch (InterruptedException ex) {
@@ -43,7 +43,7 @@ public class Stock {
             }
             else if(this.posAjout==false){      //si qq1 est déjà en train de charger un sw dans le stock
                 try {
-                    System.out.println("ajout déjà en cours dans le stock par un autre producteur");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : ajout déjà en cours dans le stock par un autre producteur");
                     this.wait();        //on attend
                     System.out.flush();
                 } catch (InterruptedException ex) {
@@ -69,7 +69,7 @@ public class Stock {
         while (this.listeSandwichs.size() <= 0 || this.posRetir==false) {   //tant que le stock est vide
             if(this.listeSandwichs.size() <= 0){
                 try {
-                    System.out.println("Impossible de retirer : Stock vide");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Impossible de retirer : Stock vide");
                     this.wait();                        //le thread va attendre
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
@@ -77,7 +77,7 @@ public class Stock {
             }
             else if(this.posRetir==false){
                 try {
-                    System.out.println("Impossible de retirer : un autre serveur retire actuellement");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Impossible de retirer : un autre serveur retire actuellement");
                     this.wait();                        //le thread va attendre
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");

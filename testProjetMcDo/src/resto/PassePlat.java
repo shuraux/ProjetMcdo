@@ -29,7 +29,7 @@ public class PassePlat {
     
     public synchronized void ajouterSandwichPp(Sandwich sw){
         this.sandwichsPp.add(sw);
-        System.out.println("Sandwich ajouté au passe-plat");
+        System.out.println(this.clock.getSimulationTimeEnUT() + " : Sandwich ajouté au passe-plat");
         this.notifyAll();
         System.out.flush();
     }

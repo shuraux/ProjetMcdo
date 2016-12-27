@@ -53,7 +53,7 @@ public class ClientGenerator implements Runnable {
             if (moyenne != 0) {
                 long delai = (long) probas.loiExponentielle(moyenne);
                 if (this.trace) {
-                    System.out.println("delai avant prochain client : " + delai + " ut  (moyenne = " + 1/moyenne + ")");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : delai avant prochain client : " + delai + " ut  (moyenne = " + 1/moyenne + ")");
                 }
                 try {
                     this.clock.metEnAttente(delai);

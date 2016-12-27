@@ -14,9 +14,9 @@ public class Kebab extends Sandwich{
 
     public Kebab(){
         super(2, 30, 60, 500);
-        this.tempsFabrication[0]=100;
-        this.tempsFabrication[1]=150;
-        this.nom="kebab";
+        this.tempsFabrication[0]=1000;
+        this.tempsFabrication[1]=1500;
+        this.nom="Kebab";
     }
     
     public boolean isKebab(){
