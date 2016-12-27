@@ -11,6 +11,12 @@ import resto.employe.Serveur;
 import resto.sandwich.Burger;
 import resto.sandwich.Kebab;
 import resto.sandwich.Sandwich;
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+import fr.insa.beuvron.cours.melOptimisation.utils.FonctionLineaireParMorceaux;
+import fr.insa.beuvron.cours.melOptimisation.utils.PointFLM;
+import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -18,31 +24,52 @@ import resto.sandwich.Sandwich;
  */
 public class Restaurant {
     private static final int nbrCaisses=3, nbrEmployes=5;
+    private static ArrayList<PassePlat> listePp = new ArrayList();
     private static PassePlat tabPp[] = new PassePlat[nbrCaisses];
     
-     public static void main(String[] args) {
+    public static void main(String[] args) {
+        SimulationClock clock = new SimulationClock(10);
+        List<PointFLM> flmp = Arrays.asList(new PointFLM[]{
+            new PointFLM(0, 20/3600.0),  // 20 clients par heure
+            new PointFLM(3600, 40/3600.0),
+            new PointFLM(7200, 30/3600.0),
+            new PointFLM(10800, 60/3600.0),
+            new PointFLM(14400, 0.0),});
         
-        Client c0 = new Client(0);    //on crée les clients
+        double[] probasClientReste =  FileAttenteClients.probasLineaires(20);
+        double[] probasNbrSandwich = FileAttenteClients.probasConstantes(3);
+        double[] probasTypeSandwich = FileAttenteClients.probasConstantes(2);
+        System.out.println("probas : " + Arrays.toString(probasClientReste));
+        FonctionLineaireParMorceaux arrivees = new FonctionLineaireParMorceaux(flmp);
+        
+        FileAttenteClients file = new FileAttenteClients(clock, arrivees,
+                probasClientReste,probasNbrSandwich,probasTypeSandwich);
+        file.setTrace(true);
+        
+        for (int i=0; i<nbrCaisses; i++){
+            listePp.add(new PassePlat(i, file, clock));
+        }
+        Stock stock = new Stock(clock);
+        
+        file.start();
+        
+        /*Client c0 = new Client(0);    //on crée les clients
         Client c1 = new Client(1);
         Client c2 = new Client(2);
                 
         File file = new File(3);
         file.ajouterClient(c0);
         file.ajouterClient(c1);
-        file.ajouterClient(c2);
+        file.ajouterClient(c2);*/
         
-        for (int i=0; i<nbrCaisses; i++){
-            tabPp[i] = new PassePlat(i, file);
-        }
-        Stock stock = new Stock();
-        
-        Thread p1 = new Thread(new Producteur(stock, 1));
-        Thread p2 = new Thread(new Producteur(stock, 2));
-        Thread s1 = new Thread(new Serveur(stock, 1, tabPp[0]));
-        //Thread s2 = new Thread(new Serveur(stock, 2, passePlat1));
+        Thread p1 = new Thread(new Producteur(stock, 1, clock));
+        Thread p2 = new Thread(new Producteur(stock, 2, clock));
+        Thread s1 = new Thread(new Serveur(stock, 1, listePp, clock, file, 100, true));
+        //Thread s2 = new Thread(new Serveur(stock, 2, listePp, clock, file, 200, true));
         p1.start();
         p2.start();
         s1.start();
         //s2.start();
+        clock.start();
     }
 }

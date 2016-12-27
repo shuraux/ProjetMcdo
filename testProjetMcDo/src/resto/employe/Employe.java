@@ -5,6 +5,8 @@
  */
 package resto.employe;
 
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>

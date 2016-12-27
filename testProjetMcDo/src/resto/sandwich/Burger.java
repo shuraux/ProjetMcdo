@@ -14,9 +14,9 @@ public class Burger extends Sandwich{   //correspond à s ds le sujet
 
     public Burger(){
         super(3, 20, 50, 500);
-        this.tempsFabrication[0]=8;
-        this.tempsFabrication[1]=14;
-        this.tempsFabrication[2]=18;
+        this.tempsFabrication[0]=80;
+        this.tempsFabrication[1]=140;
+        this.tempsFabrication[2]=180;
         this.nom="burger";
     }
     

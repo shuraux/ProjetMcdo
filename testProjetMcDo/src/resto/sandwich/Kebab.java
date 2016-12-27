@@ -14,8 +14,8 @@ public class Kebab extends Sandwich{
 
     public Kebab(){
         super(2, 30, 60, 500);
-        this.tempsFabrication[0]=10;
-        this.tempsFabrication[1]=15;
+        this.tempsFabrication[0]=100;
+        this.tempsFabrication[1]=150;
         this.nom="kebab";
     }
     

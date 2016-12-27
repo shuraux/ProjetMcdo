@@ -5,8 +5,10 @@
  */
 package resto;
 
+import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
 import java.util.ArrayList;
 import resto.sandwich.Sandwich;
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 
 /**
  *
@@ -15,13 +17,14 @@ import resto.sandwich.Sandwich;
 public class PassePlat {
     private final int numero;   //numéro qui permet d'identifer le passe-plat
     private final ArrayList<Sandwich> sandwichsPp;
-    private boolean commandeComplete;
-    private File file;
+    private SimulationClock clock;
+    private FileAttenteClients file;
     
-    public PassePlat(int numero, File file){
+    public PassePlat(int numero, FileAttenteClients file, SimulationClock clock){
         this.numero=numero; //on donne un id au pp
-        this.file=file;
         this.sandwichsPp = new ArrayList<>();
+        this.clock = clock;
+        this.file = file;
     }
     
     public synchronized void ajouterSandwichPp(Sandwich sw){
@@ -33,20 +36,6 @@ public class PassePlat {
     
     public int getNumero() {
         return numero;
-    }
-
-    /**
-     * @return the commandeComplete
-     */
-    public boolean isCommandeComplete() {
-        return commandeComplete;
-    }
-
-    /**
-     * @return the file
-     */
-    public File getFile() {
-        return file;
     }
     
 }

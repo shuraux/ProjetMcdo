@@ -8,6 +8,7 @@ package resto.employe;
 import resto.Stock;
 import resto.sandwich.Burger;
 import resto.sandwich.Kebab;
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 
 /**
  *
@@ -15,10 +16,12 @@ import resto.sandwich.Kebab;
  */
 public class Producteur extends Employe implements Runnable{
     private Stock stock;
+    private SimulationClock clock;
     
-    public Producteur(Stock stock, int numero){
+    public Producteur(Stock stock, int numero, SimulationClock clock){
         this.numero=numero;
         this.stock=stock;
+        this.clock=clock;
     }
     
     public synchronized Kebab prodKebab(){
@@ -33,28 +36,30 @@ public class Producteur extends Employe implements Runnable{
     
     @Override
     public void run(){
-        for(int i=0; i<2; i++){
-            Kebab kebab=prodKebab();
-            try {
-                Thread.sleep(kebab.getTempsFabrication()[0]);
-            } catch (InterruptedException ex) {
-                throw new Error("pas d'interrupt dans cet exemple");
+        while(true){
+            for(int i=0; i<2; i++){
+                Kebab kebab=prodKebab();
+                try {
+                    this.clock.metEnAttente(kebab.getTempsFabrication()[0]);
+                } catch (InterruptedException ex) {
+                    throw new Error("pas d'interrupt dans cet exemple");
+                }
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab créé par le producteur n°" + numero);
+                stock.ajouterSandwich(kebab);  //ajoute le kebab si le stock n'est pas plein, sinon attend
+                System.out.println("Il y a " + stock.getNbrKebabs() + " kebabs dans le stock");
             }
-            System.out.println("Kebab créé par le producteur n°" + numero);
-            stock.ajouterSandwich(kebab);  //ajoute le kebab si le stock n'est pas plein, sinon attend
-            System.out.println("Il y a " + stock.getNbrKebabs() + " kebabs dans le stock");
-        }
-        
-        for(int i=0; i<3; i++){
-            Burger burger=prodBurger();
-            try {
-                Thread.sleep(burger.getTempsFabrication()[0]);
-            } catch (InterruptedException ex) {
-                throw new Error("pas d'interrupt dans cet exemple");
+
+            for(int i=0; i<3; i++){
+                Burger burger=prodBurger();
+                try {
+                    this.clock.metEnAttente(burger.getTempsFabrication()[0]);
+                } catch (InterruptedException ex) {
+                    throw new Error("pas d'interrupt dans cet exemple");
+                }
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger créé par le producteur n°" + numero);
+                stock.ajouterSandwich(burger);  //ajoute le kebab si le stock n'est pas plein, sinon attend
+                System.out.println("Il y a " + stock.getNbrBurgers() + " burgers dans le stock");
             }
-            System.out.println("Burger créé par le producteur n°" + numero);
-            stock.ajouterSandwich(burger);  //ajoute le kebab si le stock n'est pas plein, sinon attend
-            System.out.println("Il y a " + stock.getNbrBurgers() + " burgers dans le stock");
         }
     }
 }
