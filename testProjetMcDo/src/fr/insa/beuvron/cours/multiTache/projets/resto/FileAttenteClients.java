@@ -23,7 +23,7 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 import fr.insa.beuvron.cours.probas.CalculsDirectDistributions;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
-import resto.employe.Serveur;
+import resto.Employe;
 
 /**
  * Simulation de l'arrivée de client dans un restaurant.
@@ -42,7 +42,7 @@ public class FileAttenteClients {
     private Random rand;
     private Thread genThread;
     private boolean trace;
-    private Serveur serveur;
+    private Employe serveur;
 
     /**
      * 

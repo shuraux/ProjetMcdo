@@ -3,48 +3,96 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package resto.employe;
+package resto;
 
-import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
-import resto.PassePlat;
 import resto.Stock;
 import resto.sandwich.Burger;
 import resto.sandwich.Kebab;
 import resto.sandwich.Sandwich;
 import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
+import resto.PassePlat;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
-public class Serveur extends Employe implements Runnable{
-    private Stock stock;
-    private PassePlat Pp;
-    private SimulationClock clock;
-    private FileAttenteClients file;
-    private long tempsServiceEnUT;
-    private boolean trace;
+public class Employe implements Runnable{
+    private final int numero;
+    private final Stock stock;
+    private final ArrayList<PassePlat> listePp;
+    private final SimulationClock clock;
+    private final FileAttenteClients file;
+    private final long tempsServiceEnUT;
     private ArrayList<Sandwich> commande = new ArrayList();
-    
-    public Serveur(Stock stock, int numero, PassePlat Pp, SimulationClock clock,
-            FileAttenteClients file, long tempsServiceEnUT, boolean trace){
-        super(numero);
+    private int role;
+   
+    public Employe(int numero, int role, Stock stock, ArrayList<PassePlat> listePp,
+            FileAttenteClients file, long tempsServiceEnUT, SimulationClock clock){
+        this.numero=numero;
+        this.role=role;
         this.stock=stock;
-        this.Pp=Pp;
         this.clock=clock;
+        this.listePp=listePp;
         this.file=file;
         this.tempsServiceEnUT = tempsServiceEnUT;
-        this.trace = trace;
     }
-    
+   
     @Override
-    public synchronized void run(){
-        while (true) {
+    public void run(){
+       while (role==1) {
             service();
         }
+       while(role==2){
+            production(2, prodKebab());
+            production(3, prodBurger());
+        }
+       while(role==0){
+       }
     }
     
+    //méthodes liées à la production
+    public synchronized void production(int nombre, Sandwich sw){
+        if(sw instanceof Kebab){
+            try {
+                this.clock.metEnAttente(prodKebab().getTempsFabrication()[nombre-1]);
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : " + nombre +
+                    " Kebabs créé par le producteur n°" + this.numero);
+            for(int i=0; i<nombre; i++){
+                stock.ajouterSandwich(prodKebab()); //ajoute le kebab si le stock n'est pas plein, sinon attend
+            }
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Il y a " +
+                    stock.getNbrKebabs() + " kebabs dans le stock");
+        }
+        else if(sw instanceof Burger){
+            try {
+                this.clock.metEnAttente(prodBurger().getTempsFabrication()[nombre-1]);
+            } catch (InterruptedException ex) {
+                throw new Error("pas d'interrupt dans cet exemple");
+            }
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : " + nombre +
+                    " Burgers créé par le producteur n°" + this.numero);
+            for(int i=0; i<nombre; i++){
+                stock.ajouterSandwich(prodBurger()); //ajoute le burger si le stock n'est pas plein, sinon attend
+            }
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Il y a " +
+                    stock.getNbrBurgers() + " burgers dans le stock");
+        }
+    }
+    public synchronized Kebab prodKebab(){
+        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
+        return kb;
+    }
+    public synchronized Burger prodBurger(){
+        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
+        return bg;
+    }
+    
+    //méthodes liées au service
     public synchronized ArrayList<Sandwich> convertirCommande(Integer client){
         ArrayList<Sandwich> commande = new ArrayList();
         int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
@@ -60,7 +108,6 @@ public class Serveur extends Employe implements Runnable{
         }
         return commande;
     }
-    
     public synchronized void remplirCommande(){
         Sandwich swCommande;
         int i=0;
@@ -76,7 +123,7 @@ public class Serveur extends Employe implements Runnable{
                     this.stock.setPosRetir(true);
                 }
                 else {
-                    this.Pp.ajouterSandwichPp(swCommande);  //on ajoute le sandwich sur le passe plat
+                    this.listePp.get(0).ajouterSandwichPp(swCommande);  //on ajoute le sandwich sur le passe plat
                     System.out.println(this.clock.getSimulationTimeEnUT() +
                             " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() +
                             " kebabs dans le stock");
@@ -92,7 +139,7 @@ public class Serveur extends Employe implements Runnable{
                     this.stock.setPosRetir(true);
                 }
                 else {
-                    this.Pp.ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
                     System.out.println(this.clock.getSimulationTimeEnUT() +
                             " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+
                             " burgers dans le stock");
@@ -101,7 +148,6 @@ public class Serveur extends Employe implements Runnable{
             }
         }
     }
-    
     public synchronized void service(){
         try {
                 this.clock.metEnAttente(this.tempsServiceEnUT);
@@ -120,5 +166,19 @@ public class Serveur extends Employe implements Runnable{
                     " sert le client n°" + client + "\n");
             commande.clear();
             }
+    }
+
+    /**
+     * @return the role
+     */
+    public int getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(int role) {
+        this.role = role;
     }
 }

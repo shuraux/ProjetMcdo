@@ -6,8 +6,6 @@
 package resto;
 
 import java.util.ArrayList;
-import resto.employe.Producteur;
-import resto.employe.Serveur;
 import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 import fr.insa.beuvron.cours.melOptimisation.utils.FonctionLineaireParMorceaux;
 import fr.insa.beuvron.cours.melOptimisation.utils.PointFLM;
@@ -49,18 +47,25 @@ public class Restaurant {
         
         file.start();
         
-        Producteur prod1 = new Producteur(stock, 1, clock);
+        Employe employe1 = new Employe(1, 1, stock, listePp, file, 3, clock);
+        Employe employe2 = new Employe(2, 2, stock, listePp, file, 3, clock);
+        Thread e1 = new Thread(employe1);
+        Thread e2 = new Thread(employe2);
+        e1.start();
+        e2.start();
+        
+        /*Producteur prod1 = new Producteur(stock, 1, clock);
         Producteur prod2 = new Producteur(stock, 2, clock);
         Thread p1 = new Thread(prod1);
         Thread p2 = new Thread(prod2);
-        Serveur serv1 = new Serveur(stock, 1, listePp.get(0), clock, file, 3, true);
-        Serveur serv2 = new Serveur(stock, 2, listePp.get(1), clock, file, 3, true);
+        Serveur serv1 = new Serveur(stock, 1, listePp, clock, file, 3, true);
+        Serveur serv2 = new Serveur(stock, 2, listePp, clock, file, 3, true);
         Thread s1 = new Thread(serv1);
         Thread s2 = new Thread(serv2);
         p1.start();
         //p2.start();
         s1.start();
-        s2.start();
+        s2.start();*/
         clock.start();
     }
 }
