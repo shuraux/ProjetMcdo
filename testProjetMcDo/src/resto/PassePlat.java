@@ -9,6 +9,8 @@ import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
 import java.util.ArrayList;
 import resto.sandwich.Sandwich;
 import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+import resto.sandwich.Burger;
+import resto.sandwich.Kebab;
 
 /**
  *
@@ -17,14 +19,16 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 public class PassePlat {
     private final int numero;   //numéro qui permet d'identifer le passe-plat
     private final ArrayList<Sandwich> sandwichsPp;
-    private SimulationClock clock;
-    private FileAttenteClients file;
+    private final SimulationClock clock;
+    private final FileAttenteClients file;
+    private boolean occupe;
     
     public PassePlat(int numero, FileAttenteClients file, SimulationClock clock){
         this.numero=numero; //on donne un id au pp
-        this.sandwichsPp = new ArrayList<>();
-        this.clock = clock;
-        this.file = file;
+        this.sandwichsPp=new ArrayList<>();
+        this.clock=clock;
+        this.file=file;
+        this.occupe=false;
     }
     
     public synchronized void ajouterSandwichPp(Sandwich sw){
@@ -35,8 +39,39 @@ public class PassePlat {
         System.out.flush();
     }
     
+    public synchronized ArrayList<Sandwich> convertirCommande(Integer client){
+        ArrayList<Sandwich> commande = new ArrayList();
+        int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
+        for(int i=0; i<res.length; i++){
+            if(res[i]==0){
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
+                commande.add(new Kebab(this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
+            }
+            else {
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
+            commande.add(new Burger(this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
+            }
+        }
+        return commande;
+    }
+    public synchronized Integer retirerClient(){
+        Integer client = this.file.retirePremierClient();
+        return client;
+    }
+    
     public int getNumero() {
         return numero;
+    }
+
+    public boolean isOccupe() {
+        return occupe;
+    }
+
+    /**
+     * @param occupe the occupe to set
+     */
+    public void setOccupe(boolean occupe) {
+        this.occupe = occupe;
     }
     
 }

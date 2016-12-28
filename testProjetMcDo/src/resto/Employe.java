@@ -5,14 +5,12 @@
  */
 package resto;
 
-import resto.Stock;
 import resto.sandwich.Burger;
 import resto.sandwich.Kebab;
 import resto.sandwich.Sandwich;
 import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
-import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
-import resto.PassePlat;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  *
@@ -23,33 +21,59 @@ public class Employe implements Runnable{
     private final Stock stock;
     private final ArrayList<PassePlat> listePp;
     private final SimulationClock clock;
-    private final FileAttenteClients file;
     private final long tempsServiceEnUT;
     private ArrayList<Sandwich> commande = new ArrayList();
-    private int role;
+    private final ArrayBlockingQueue<Integer> file;
+    private int role;   //0 : ne fait rien, 1 : sert, 2 : produit
    
-    public Employe(int numero, int role, Stock stock, ArrayList<PassePlat> listePp,
-            FileAttenteClients file, long tempsServiceEnUT, SimulationClock clock){
+    public Employe(int numero, Stock stock, ArrayList<PassePlat> listePp, ArrayBlockingQueue file, long tempsServiceEnUT,
+            SimulationClock clock, int role){
         this.numero=numero;
         this.role=role;
         this.stock=stock;
         this.clock=clock;
         this.listePp=listePp;
-        this.file=file;
         this.tempsServiceEnUT = tempsServiceEnUT;
+        this.file=file;
     }
    
     @Override
-    public void run(){
-       while (role==1) {
-            service();
+    public synchronized void run(){
+        while(true){
+            while (this.role==1) {
+                System.out.println(this.clock.getSimulationTimeEnUT() + " :  L'employe n°" +
+                        this.numero + " devient serveur");
+                service();
+                this.role=0;
+                /*synchronized(this.stock){
+                    try {
+                        System.out.println("passage dans sync stock par n°" + this.numero);
+                        this.stock.wait();
+                        this.role=2;
+                    } catch (InterruptedException ex){
+                    }
+                }*/
+            }
+            
+            while(this.role==2){
+                System.out.println(this.clock.getSimulationTimeEnUT() + " :  L'employe n°" +
+                                this.numero + " devient producteur");
+                production(2, prodKebab());
+                production(3, prodBurger());
+                //this.role=0;
+            }
+       
+            while(this.role==0){
+                synchronized(this.file){
+                    try {
+                        //System.out.println(this.clock.getSimulationTimeEnUT() + " : Passage dans sync queue par n°" + this.numero);
+                        this.file.wait();
+                        this.role=1;        //lorsqu'un nouveau client arrive dans la file un employe en attente devient serveur
+                    } catch (InterruptedException ex){
+                    }
+                }
+            }
         }
-       while(role==2){
-            production(2, prodKebab());
-            production(3, prodBurger());
-        }
-       while(role==0){
-       }
     }
     
     //méthodes liées à la production
@@ -93,22 +117,7 @@ public class Employe implements Runnable{
     }
     
     //méthodes liées au service
-    public synchronized ArrayList<Sandwich> convertirCommande(Integer client){
-        ArrayList<Sandwich> commande = new ArrayList();
-        int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
-        for(int i=0; i<res.length; i++){
-            if(res[i]==0){
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
-                commande.add(new Kebab(this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
-            }
-            else {
-            System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
-            commande.add(new Burger(this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
-            }
-        }
-        return commande;
-    }
-    public synchronized void remplirCommande(){
+    public synchronized void remplirCommande(int choixPp){
         Sandwich swCommande;
         int i=0;
         while(i<commande.size()){   //on est dans le while tant qu'on a pas fini la commande
@@ -123,7 +132,7 @@ public class Employe implements Runnable{
                     this.stock.setPosRetir(true);
                 }
                 else {
-                    this.listePp.get(0).ajouterSandwichPp(swCommande);  //on ajoute le sandwich sur le passe plat
+                    this.listePp.get(choixPp).ajouterSandwichPp(swCommande);  //on ajoute le sandwich sur le passe plat
                     System.out.println(this.clock.getSimulationTimeEnUT() +
                             " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() +
                             " kebabs dans le stock");
@@ -139,7 +148,7 @@ public class Employe implements Runnable{
                     this.stock.setPosRetir(true);
                 }
                 else {
-                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                    this.listePp.get(choixPp).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
                     System.out.println(this.clock.getSimulationTimeEnUT() +
                             " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+
                             " burgers dans le stock");
@@ -149,35 +158,65 @@ public class Employe implements Runnable{
         }
     }
     public synchronized void service(){
+        int choixPp=choixPp();
+        Integer client = this.listePp.get(choixPp).retirerClient();
+        if (client == null) {
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero
+                    + " n'a plus de client");
+            synchronized(this.file){
+                try {
+                    //System.out.println(this.clock.getSimulationTimeEnUT() +" : Passage dans sync queue par n°" + this.numero);
+                    this.file.wait();
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : sortie du wait par serveur n°" +
+                            this.numero);
+                    //this.role=1;        //lorsqu'un nouveau client arrive dans la file un employe en attente devient serveur
+                } catch (InterruptedException ex){
+                }
+            }
+        }
         try {
-                this.clock.metEnAttente(this.tempsServiceEnUT);
-            } catch (InterruptedException ex) {
-            }
-            Integer client = this.file.retirePremierClient();
-            if (client == null) {
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero
-                        + " n'a plus de client");
-            }
-            else {
-            commande=convertirCommande(client); //on convertit la commande tab en ArrayList
-            remplirCommande();                  //on parcourt la liste de commande et on add les sw au pp
+            this.clock.metEnAttente(this.tempsServiceEnUT);
+        } catch (InterruptedException ex) {
+        }
+        client = this.listePp.get(choixPp).retirerClient();
+        commande=this.listePp.get(choixPp).convertirCommande(client); //on convertit la commande tab en ArrayList
+        remplirCommande(choixPp);                  //on parcourt la liste de commande et on add les sw au pp
                         
-            System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero +
-                    " sert le client n°" + client + "\n");
-            commande.clear();
-            }
+        System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero +
+                " sert le client n°" + client + "\n");
+        commande.clear();
+        this.listePp.get(choixPp).setOccupe(false);
+        //this.notify();   
     }
-
-    /**
-     * @return the role
-     */
+    
+    public synchronized int choixPp(){
+        int i=0;
+        while(this.listePp.get(i).isOccupe()){
+            //System.out.println("pp occupé");
+            //System.out.flush();
+                i++;
+            }
+        if(i<this.listePp.size()){
+            this.listePp.get(i).setOccupe(true);
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero + 
+                    " se rend sur le passe-plat n°" + this.listePp.get(i).getNumero());
+            return i;
+        }
+        else {
+            try{
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : Pas de passe-plat disponible pour le serveur n°" +
+                        this.numero);
+                this.wait();
+            } catch(InterruptedException ex){
+            }
+        }
+        System.out.println("pas normal");
+        return 1000;
+    }
+    
     public int getRole() {
         return role;
     }
-
-    /**
-     * @param role the role to set
-     */
     public void setRole(int role) {
         this.role = role;
     }

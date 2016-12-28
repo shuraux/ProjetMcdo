@@ -18,8 +18,8 @@ import java.util.List;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
-    private static final int nbrCaisses=3, nbrEmployes=5;
-    private static ArrayList<PassePlat> listePp = new ArrayList();
+    private static final int nbrCaisses=3, nbrEmployes=3;
+    private final static ArrayList<PassePlat> listePp = new ArrayList();
     
     public static void main(String[] args) {
         SimulationClock clock = new SimulationClock(70);
@@ -36,36 +36,29 @@ public class Restaurant {
         System.out.println("probas : " + Arrays.toString(probasClientReste));
         FonctionLineaireParMorceaux arrivees = new FonctionLineaireParMorceaux(flmp);
         
+        Stock stock = new Stock(clock);
+        
         FileAttenteClients file = new FileAttenteClients(clock, arrivees,
                 probasClientReste,probasNbrSandwich,probasTypeSandwich);
         file.setTrace(true);
         
         for (int i=0; i<nbrCaisses; i++){
-            listePp.add(new PassePlat(i, file, clock));
+            listePp.add(new PassePlat(i+1, file, clock));
         }
-        Stock stock = new Stock(clock);
+        
+        Employe employe1 = new Employe(1, stock, listePp, file.getFile(), 3, clock,1);
+        Employe employe2 = new Employe(2, stock, listePp, file.getFile(), 3, clock, 2);
+        Employe employe3 = new Employe(3, stock, listePp, file.getFile(), 3, clock, 0);
+        Thread e1 = new Thread(employe1);
+        Thread e2 = new Thread(employe2);
+        Thread e3 = new Thread(employe3);
         
         file.start();
         
-        Employe employe1 = new Employe(1, 1, stock, listePp, file, 3, clock);
-        Employe employe2 = new Employe(2, 2, stock, listePp, file, 3, clock);
-        Thread e1 = new Thread(employe1);
-        Thread e2 = new Thread(employe2);
         e1.start();
         e2.start();
+        e3.start();
         
-        /*Producteur prod1 = new Producteur(stock, 1, clock);
-        Producteur prod2 = new Producteur(stock, 2, clock);
-        Thread p1 = new Thread(prod1);
-        Thread p2 = new Thread(prod2);
-        Serveur serv1 = new Serveur(stock, 1, listePp, clock, file, 3, true);
-        Serveur serv2 = new Serveur(stock, 2, listePp, clock, file, 3, true);
-        Thread s1 = new Thread(serv1);
-        Thread s2 = new Thread(serv2);
-        p1.start();
-        //p2.start();
-        s1.start();
-        s2.start();*/
         clock.start();
     }
 }

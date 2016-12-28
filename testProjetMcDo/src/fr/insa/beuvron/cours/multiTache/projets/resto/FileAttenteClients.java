@@ -23,7 +23,6 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 import fr.insa.beuvron.cours.probas.CalculsDirectDistributions;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
-import resto.Employe;
 
 /**
  * Simulation de l'arrivée de client dans un restaurant.
@@ -31,18 +30,17 @@ import resto.Employe;
  */
 public class FileAttenteClients {
 
-    private ArrayBlockingQueue<Integer> file;
-    private FonctionLineaireParMorceaux nombreMoyenClientsParUT;
-    private double[] probasClientReste;
-    private double[] probasNombreDeSandwichs;
-    private double[] probasTypesDeSandwichs;
-    private ClientGenerator generator;
+    private final ArrayBlockingQueue<Integer> file;
+    private final FonctionLineaireParMorceaux nombreMoyenClientsParUT;
+    private final double[] probasClientReste;
+    private final double[] probasNombreDeSandwichs;
+    private final double[] probasTypesDeSandwichs;
+    private final ClientGenerator generator;
     private int numNextClient;
-    private SimulationClock clock;
-    private Random rand;
+    private final SimulationClock clock;
+    private final Random rand;
     private Thread genThread;
     private boolean trace;
-    private Employe serveur;
 
     /**
      * 
@@ -65,7 +63,7 @@ public class FileAttenteClients {
         this.rand = new Random();
     }
 
-    public void start() {
+    public synchronized void start() {
         this.genThread = new Thread(this.generator);
         this.genThread.start();
     }
@@ -79,7 +77,12 @@ public class FileAttenteClients {
         boolean ok = false;
         if (nbr < probasClientReste.length) {
             if (this.rand.nextDouble() < this.probasClientReste[nbr]) {
-                getFile().add(this.numNextClient);
+                //getFile().add(this.numNextClient);
+                synchronized(this.file){
+                    getFile().add(this.numNextClient);
+                    this.file.notify();
+                    //System.out.println(this.clock.getSimulationTimeEnUT() + " : notify fileAttente appelé");
+                }
                 ok = true;
             }
         }
@@ -87,9 +90,11 @@ public class FileAttenteClients {
             if (ok) {
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
                         (this.numNextClient) + " entre dans file ("+this.getFile().size()+" clients)");
+                System.out.flush();
             } else {
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
                         (this.numNextClient) + " trouve trop de monde("+this.getFile().size()+" clients)");
+                System.out.flush();
             }
         }
         this.numNextClient++;
@@ -103,7 +108,7 @@ public class FileAttenteClients {
      * 
      * @return 
      */
-    public int[] commandeAlea() {
+    public synchronized int[] commandeAlea() {
         CalculsDirectDistributions probas = new CalculsDirectDistributions();
         int nbr = probas.loiProbaExplicite(this.probasNombreDeSandwichs)+1;
         int[] res = new int[nbr];

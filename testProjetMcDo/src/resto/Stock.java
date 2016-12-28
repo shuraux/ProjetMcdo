@@ -10,17 +10,20 @@ import resto.sandwich.Burger;
 import resto.sandwich.Sandwich;
 import resto.sandwich.Kebab;
 import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Stock {
-    private ArrayList<Sandwich> listeSandwichs;
+    //private List<Sandwich> listeSandwichs = Collections.synchronizedList(new ArrayList<Sandwich>());
+    private final ArrayList<Sandwich> listeSandwichs;
     private final int stockMax=100;
     private boolean posAjout, posRetir;
     private final int dureeChargement=4, dureeDechargement=3;
-    private SimulationClock clock;
+    private final SimulationClock clock;
     
     public Stock(SimulationClock clock){
         this.listeSandwichs = new ArrayList<>();
@@ -28,7 +31,7 @@ public class Stock {
         this.posRetir = true;
         this.clock = clock;
     }
-    
+
     public synchronized void ajouterSandwich(Sandwich sw){
         //System.out.println("check entrée ajouterSandwich");
         while (this.getListeSandwichs().size()==getStockMax() || this.isPosAjout()==false){
@@ -63,8 +66,7 @@ public class Stock {
         //System.out.println("check sortie ajouterSandwich");
         this.notifyAll();
         System.out.flush();
-    }
-    
+    } 
     public synchronized Sandwich retirerSandwich(Sandwich sw){
         Sandwich sandwichRetire=null;
         
@@ -72,6 +74,11 @@ public class Stock {
             if(this.listeSandwichs.size() <= 0){
                 try {
                     System.out.println(this.clock.getSimulationTimeEnUT() + " : Impossible de retirer : Stock vide");
+                    /*synchronized(this){
+                        this.notify();  //on réveille un employé qui est serveur
+                        System.out.println(this.clock.getSimulationTimeEnUT() +
+                                " : notify de retirerSandwich exec");
+                    }*/
                     this.wait();                        //le thread va attendre
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
@@ -149,8 +156,7 @@ public class Stock {
             return sandwichRetire;      //on renvoie le sandwich retiré qui sera mis sur le passeplat
         }
         return sandwichRetire;      //return null : jamais censé se produire
-    }
-    
+    } 
     public synchronized void jeterSandwichs(){  //si un sw périmé est détecté par un serveur on va check tous les sw et jeter les périmés
         if(!this.listeSandwichs.isEmpty()){ //si le stock n'est pas vide
             for(int i=0; i<this.listeSandwichs.size(); i++){    //on va parcourir la liste
@@ -184,8 +190,7 @@ public class Stock {
             }
         }
         return nb;
-    }
-    
+    } 
     public int getNbrBurgers(){
         int nb=0;
         for (int i=0; i<this.listeSandwichs.size(); i++){
@@ -195,45 +200,21 @@ public class Stock {
         }
         return nb;
     }
-
-    /**
-     * @return the listeSandwichs
-     */
     public ArrayList<Sandwich> getListeSandwichs() {
         return listeSandwichs;
     }
-
-    /**
-     * @return the stockMax
-     */
     public int getStockMax() {
         return stockMax;
     }
-
-    /**
-     * @return the posAjout
-     */
     public boolean isPosAjout() {
         return posAjout;
     }
-
-    /**
-     * @param posAjout the posAjout to set
-     */
     public void setPosAjout(boolean posAjout) {
         this.posAjout = posAjout;
     }
-
-    /**
-     * @return the posRetir
-     */
     public boolean isPosRetir() {
         return posRetir;
     }
-
-    /**
-     * @param posRetir the posRetir to set
-     */
     public void setPosRetir(boolean posRetir) {
         this.posRetir = posRetir;
     }
