@@ -22,14 +22,13 @@ import java.util.List;
 public class Restaurant {
     private static final int nbrCaisses=3, nbrEmployes=5;
     private static ArrayList<PassePlat> listePp = new ArrayList();
-    private static PassePlat tabPp[] = new PassePlat[nbrCaisses];
     
     public static void main(String[] args) {
-        SimulationClock clock = new SimulationClock(100);
+        SimulationClock clock = new SimulationClock(70);
         List<PointFLM> flmp = Arrays.asList(new PointFLM[]{
-            new PointFLM(0, 60/3600.0),  // 1 clients par heure
-            new PointFLM(3600, 40/3600.0),
-            new PointFLM(7200, 30/3600.0),
+            new PointFLM(0, 60/3600.0),  // 20 clients par heure
+            new PointFLM(3600, 60/3600.0),
+            new PointFLM(7200, 60/3600.0),
             new PointFLM(10800, 60/3600.0),
             new PointFLM(14400, 0.0),});
         
@@ -52,12 +51,12 @@ public class Restaurant {
         
         Thread p1 = new Thread(new Producteur(stock, 1, clock));
         Thread p2 = new Thread(new Producteur(stock, 2, clock));
-        Thread s1 = new Thread(new Serveur(stock, 1, listePp, clock, file, 3, true));
-        //Thread s2 = new Thread(new Serveur(stock, 2, listePp, clock, file, 200, true));
+        Thread s1 = new Thread(new Serveur(stock, 1, listePp.get(0), clock, file, 3, true));
+        Thread s2 = new Thread(new Serveur(stock, 2, listePp.get(1), clock, file, 3, true));
         p1.start();
-        p2.start();
+        //p2.start();
         s1.start();
-        //s2.start();
+        s2.start();
         clock.start();
     }
 }

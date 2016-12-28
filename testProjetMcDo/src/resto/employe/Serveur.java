@@ -21,18 +21,18 @@ import java.util.Arrays;
  */
 public class Serveur extends Employe implements Runnable{
     private Stock stock;
-    private ArrayList<PassePlat> listePp;
+    private PassePlat Pp;
     private SimulationClock clock;
     private FileAttenteClients file;
     private long tempsServiceEnUT;
     private boolean trace;
     private ArrayList<Sandwich> commande = new ArrayList();
     
-    public Serveur(Stock stock, int numero, ArrayList<PassePlat> listePp, SimulationClock clock,
+    public Serveur(Stock stock, int numero, PassePlat Pp, SimulationClock clock,
             FileAttenteClients file, long tempsServiceEnUT, boolean trace){
         super(numero);
         this.stock=stock;
-        this.listePp=listePp;
+        this.Pp=Pp;
         this.clock=clock;
         this.file=file;
         this.tempsServiceEnUT = tempsServiceEnUT;
@@ -72,34 +72,38 @@ public class Serveur extends Employe implements Runnable{
                         int i=0;
                         while(i<commande.size()){
                                 //on est dans le while tant qu'on a pas fini la commande
-                            swCommande=this.stock.retirerSandwich(commande.get(i));
-                            if(swCommande instanceof Kebab){
-                                if(swCommande.Perime()==true){      //si sw périmé on le jette donc on augmente pas i
-                                    System.out.println(this.clock.getSimulationTimeEnUT() + 
-                                            " : " + swCommande.getNom() + " périmé. Il est jeté.  Il reste " + stock.getNbrKebabs() +
-                                            " kebabs dans le stock");
+                            swCommande=commande.get(i);
+                            
+                            if(swCommande instanceof Kebab){   //si sw pas périmé on ajoute le sw au pp et on augmente i  
+                                Sandwich swStock=this.stock.retirerSandwich(swCommande);
+                                if(swStock.Perime()==true){      //si le sw retiré est périmé
+                                    this.stock.setPosRetir(false);
+                                    System.out.println(this.clock.getSimulationTimeEnUT() + " : kebab périmé détecté");
+                                    this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
+                                    this.stock.setPosRetir(true);
                                 }
-                                else {          //si sw pas périmé on ajoute le sw au pp et on augmente i
-                                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                                else {
+                                    this.Pp.ajouterSandwichPp(swCommande);  //on ajoute le sandwich sur le passe plat
                                     System.out.println(this.clock.getSimulationTimeEnUT() +
-                                            " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() +
-                                            " kebabs dans le stock");
-                                    i++;
+                                        " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() +
+                                        " kebabs dans le stock");
+                                i++;
                                 }
                             }
                             else if(swCommande instanceof Burger){
-                                if(swCommande.Perime()==true){
-                                    System.out.println(this.clock.getSimulationTimeEnUT() + 
-                                            " : " + swCommande.getNom() + " périmé. Il est jeté.  Il reste " +
-                                            stock.getNbrBurgers()+
-                                            " burgers dans le stock");
+                                Sandwich swStock=this.stock.retirerSandwich(swCommande);
+                                if(swStock.Perime()==true){      //si le sw retiré est périmé
+                                    this.stock.setPosRetir(false);
+                                    System.out.println(this.clock.getSimulationTimeEnUT() + " : burger périmé détecté");
+                                    this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
+                                    this.stock.setPosRetir(true);
                                 }
                                 else {
-                                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                                    this.Pp.ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
                                     System.out.println(this.clock.getSimulationTimeEnUT() +
                                             " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+
                                             " burgers dans le stock");
-                                    i++;
+                                i++;
                                 }
                             }
                         }
