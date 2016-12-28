@@ -19,7 +19,7 @@ public class Stock {
     private ArrayList<Sandwich> listeSandwichs;
     private final int stockMax=100;
     private boolean posAjout, posRetir;
-    private final int dureeChargement=500, dureeDechargement=300;
+    private final int dureeChargement=4, dureeDechargement=3;
     private SimulationClock clock;
     
     public Stock(SimulationClock clock){
@@ -44,8 +44,8 @@ public class Stock {
             else if(this.posAjout==false){      //si qq1 est déjà en train de charger un sw dans le stock
                 try {
                     System.out.println(this.clock.getSimulationTimeEnUT() + " : ajout déjà en cours dans le stock par un autre producteur");
-                    this.wait();        //on attend
                     System.out.flush();
+                    this.wait();        //on attend
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
@@ -58,6 +58,7 @@ public class Stock {
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         this.listeSandwichs.add(sw);        //on add le sw au stock
+        System.out.println(this.clock.getSimulationTimeEnUT() + " : " + sw.getNom() + " ajouté au stock");
         this.posAjout=true;                 //on réouvre la possiblité de charger
         //System.out.println("check sortie ajouterSandwich");
         this.notifyAll();
@@ -99,7 +100,7 @@ public class Stock {
                             }
                             this.listeSandwichs.remove(i);                  //on l'enlève
                             this.posRetir=true;
-                            System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger déchargé");
+                            //System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger déchargé");
                             retire=true;                                    //on sort du while
                         }
                     }
@@ -130,7 +131,7 @@ public class Stock {
                             }
                             this.listeSandwichs.remove(i);                  //on l'enlève
                             this.posRetir=true;
-                            System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab déchargé");
+                            //System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab déchargé");
                             retire=true;                                    //on sort du while
                         }
                     }

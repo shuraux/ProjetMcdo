@@ -11,13 +11,15 @@ package resto.sandwich;
  */
 public class Sandwich {
     protected int prodSimultMax;
-    protected int coutFabrication, prixVente, tempsPeremption;
+    protected int coutFabrication, prixVente;
+    long tempsPeremption, momentProd;
     protected String nom;
     
-    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, int tempsPeremption){
+    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long tempsPeremption, long momentProd){
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
         this.tempsPeremption=tempsPeremption;
+        this.momentProd=momentProd;
         this.prodSimultMax=prodSimultMax;
         this.nom="sandwich";
     }

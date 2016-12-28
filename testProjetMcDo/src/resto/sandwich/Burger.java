@@ -12,11 +12,11 @@ package resto.sandwich;
 public class Burger extends Sandwich{   //correspond à s ds le sujet
     private int[] tempsFabrication= new int[prodSimultMax];
 
-    public Burger(){
-        super(3, 20, 50, 500);
-        this.tempsFabrication[0]=800;
-        this.tempsFabrication[1]=1400;
-        this.tempsFabrication[2]=1800;
+    public Burger(long momentProd){
+        super(3, 20, 50, 30, momentProd);
+        this.tempsFabrication[0]=8;
+        this.tempsFabrication[1]=14;
+        this.tempsFabrication[2]=18;
         this.nom="Burger";
     }
     

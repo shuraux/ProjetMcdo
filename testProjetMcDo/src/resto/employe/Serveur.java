@@ -30,8 +30,8 @@ public class Serveur extends Employe implements Runnable{
     
     public Serveur(Stock stock, int numero, ArrayList<PassePlat> listePp, SimulationClock clock,
             FileAttenteClients file, long tempsServiceEnUT, boolean trace){
+        super(numero);
         this.stock=stock;
-        this.numero=numero;
         this.listePp=listePp;
         this.clock=clock;
         this.file=file;
@@ -60,16 +60,16 @@ public class Serveur extends Employe implements Runnable{
                     else {
                         int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
                         
-                        Kebab kb = new Kebab();
-                        Burger bg = new Burger();
+                        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT());
+                        Burger bg = new Burger(this.clock.getSimulationTimeEnUT());
                         for(int i=0; i<res.length; i++){
                             if(res[i]==0){
                                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
-                                commande.add(new Kebab());      //on convertit un 0 en kebab
+                                commande.add(new Kebab(this.clock.getSimulationTimeEnUT()));      //on convertit un 0 en kebab
                             }
                             else {
                                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
-                                commande.add(new Burger());     //et un 1 en burger
+                                commande.add(new Burger(this.clock.getSimulationTimeEnUT()));     //et un 1 en burger
                             }
                         }
                         

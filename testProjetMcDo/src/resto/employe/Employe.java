@@ -14,7 +14,8 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 public class Employe {
    protected int numero;
    
-   public Employe(){
+   public Employe(int numero){
+       this.numero=numero;
    }
    
 }
