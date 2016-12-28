@@ -42,7 +42,6 @@ public class Serveur extends Employe implements Runnable{
     @Override
     public synchronized void run(){
         Sandwich swCommande;
-        
         boolean encore = true;
         while (encore) {
             try {
@@ -60,8 +59,6 @@ public class Serveur extends Employe implements Runnable{
                     else {
                         int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
                         
-                        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
-                        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
                         for(int i=0; i<res.length; i++){
                             if(res[i]==0){
                                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
@@ -106,16 +103,14 @@ public class Serveur extends Employe implements Runnable{
                                 }
                             }
                         }
-                        
                         System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero +
                             " sert le client n°" + client + "\n");
                         commande.clear();
                     }
                 }
             }
-        }
-            
-     }
+        }   
+    }
 }
     
 
