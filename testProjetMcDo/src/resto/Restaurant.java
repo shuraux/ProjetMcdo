@@ -49,10 +49,14 @@ public class Restaurant {
         
         file.start();
         
-        Thread p1 = new Thread(new Producteur(stock, 1, clock));
-        Thread p2 = new Thread(new Producteur(stock, 2, clock));
-        Thread s1 = new Thread(new Serveur(stock, 1, listePp.get(0), clock, file, 3, true));
-        Thread s2 = new Thread(new Serveur(stock, 2, listePp.get(1), clock, file, 3, true));
+        Producteur prod1 = new Producteur(stock, 1, clock);
+        Producteur prod2 = new Producteur(stock, 2, clock);
+        Thread p1 = new Thread(prod1);
+        Thread p2 = new Thread(prod2);
+        Serveur serv1 = new Serveur(stock, 1, listePp.get(0), clock, file, 3, true);
+        Serveur serv2 = new Serveur(stock, 2, listePp.get(1), clock, file, 3, true);
+        Thread s1 = new Thread(serv1);
+        Thread s2 = new Thread(serv2);
         p1.start();
         //p2.start();
         s1.start();

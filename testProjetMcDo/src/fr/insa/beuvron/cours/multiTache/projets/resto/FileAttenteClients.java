@@ -23,6 +23,7 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 import fr.insa.beuvron.cours.probas.CalculsDirectDistributions;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
+import resto.employe.Serveur;
 
 /**
  * Simulation de l'arrivée de client dans un restaurant.
@@ -41,6 +42,7 @@ public class FileAttenteClients {
     private Random rand;
     private Thread genThread;
     private boolean trace;
+    private Serveur serveur;
 
     /**
      * 
@@ -50,11 +52,8 @@ public class FileAttenteClients {
      * déjà i clients dans la file d'attente. Pour i >= probasClientReste.length, on suppose
      * la proba nulle (le client s'en va tout le temps)
      */
-    public FileAttenteClients(SimulationClock clock,
-            FonctionLineaireParMorceaux nombreMoyenClientsParUT,
-            double[] probasClientReste,
-            double[] probasNombreDeSandwichs,
-            double[] probasTypesDeSandwichs) {
+    public FileAttenteClients(SimulationClock clock, FonctionLineaireParMorceaux nombreMoyenClientsParUT,
+            double[] probasClientReste, double[] probasNombreDeSandwichs, double[] probasTypesDeSandwichs){
         this.clock = clock;
         this.nombreMoyenClientsParUT = nombreMoyenClientsParUT;
         this.probasClientReste = probasClientReste;
@@ -86,14 +85,14 @@ public class FileAttenteClients {
         }
         if (this.isTrace()) {
             if (ok) {
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " + (this.numNextClient) + " entre dans file ("+this.getFile().size()+" clients)");
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
+                        (this.numNextClient) + " entre dans file ("+this.getFile().size()+" clients)");
             } else {
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " + (this.numNextClient) + " trouve trop de monde("+this.getFile().size()+" clients)");
-
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
+                        (this.numNextClient) + " trouve trop de monde("+this.getFile().size()+" clients)");
             }
         }
         this.numNextClient++;
-        this.notifyAll();
     }
 
     /**

@@ -29,7 +29,8 @@ public class PassePlat {
     
     public synchronized void ajouterSandwichPp(Sandwich sw){
         this.sandwichsPp.add(sw);
-        System.out.println(this.clock.getSimulationTimeEnUT() + " : Sandwich ajouté au passe-plat");
+        System.out.println(this.clock.getSimulationTimeEnUT() + " : " + sw.getNom() + " ajouté au passe-plat n°" +
+                this.numero);
         this.notifyAll();
         System.out.flush();
     }
