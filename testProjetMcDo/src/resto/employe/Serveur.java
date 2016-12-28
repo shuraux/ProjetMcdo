@@ -60,29 +60,51 @@ public class Serveur extends Employe implements Runnable{
                     else {
                         int[] res=this.file.commandeAlea();     //on génère une commande aléatoire (des 0 et des 1)
                         
-                        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT());
-                        Burger bg = new Burger(this.clock.getSimulationTimeEnUT());
+                        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
+                        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
                         for(int i=0; i<res.length; i++){
                             if(res[i]==0){
                                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
-                                commande.add(new Kebab(this.clock.getSimulationTimeEnUT()));      //on convertit un 0 en kebab
+                                commande.add(new Kebab(this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
                             }
                             else {
                                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
-                                commande.add(new Burger(this.clock.getSimulationTimeEnUT()));     //et un 1 en burger
+                                commande.add(new Burger(this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
                             }
                         }
-                        
-                        for(int i=0; i<commande.size(); i++){
-                                //on est dans le for tant qu'on a pas fini la commande
+                        int i=0;
+                        while(i<commande.size()){
+                                //on est dans le while tant qu'on a pas fini la commande
                             swCommande=this.stock.retirerSandwich(commande.get(i));
                             if(swCommande instanceof Kebab){
-                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() + " kebabs dans le stock");
+                                if(swCommande.Perime()==true){      //si sw périmé on le jette donc on augmente pas i
+                                    System.out.println(this.clock.getSimulationTimeEnUT() + 
+                                            " : " + swCommande.getNom() + " périmé. Il est jeté.  Il reste " + stock.getNbrKebabs() +
+                                            " kebabs dans le stock");
+                                }
+                                else {          //si sw pas périmé on ajoute le sw au pp et on augmente i
+                                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                                    System.out.println(this.clock.getSimulationTimeEnUT() +
+                                            " : Kebab retiré du stock. Il reste " + stock.getNbrKebabs() +
+                                            " kebabs dans le stock");
+                                    i++;
+                                }
                             }
                             else if(swCommande instanceof Burger){
-                                System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+ " burgers dans le stock");
+                                if(swCommande.Perime()==true){
+                                    System.out.println(this.clock.getSimulationTimeEnUT() + 
+                                            " : " + swCommande.getNom() + " périmé. Il est jeté.  Il reste " +
+                                            stock.getNbrBurgers()+
+                                            " burgers dans le stock");
+                                }
+                                else {
+                                    this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
+                                    System.out.println(this.clock.getSimulationTimeEnUT() +
+                                            " : Burger retiré du stock. Il reste " + stock.getNbrBurgers()+
+                                            " burgers dans le stock");
+                                    i++;
+                                }
                             }
-                            this.listePp.get(0).ajouterSandwichPp(swCommande);   //on ajoute le sandwich sur le passe plat
                         }
                         
                         System.out.println(this.clock.getSimulationTimeEnUT() + " : Le serveur n°" + this.numero +

@@ -5,6 +5,8 @@
  */
 package resto.sandwich;
 
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
@@ -12,8 +14,8 @@ package resto.sandwich;
 public class Burger extends Sandwich{   //correspond à s ds le sujet
     private int[] tempsFabrication= new int[prodSimultMax];
 
-    public Burger(long momentProd){
-        super(3, 20, 50, 30, momentProd);
+    public Burger(long momentProd, SimulationClock clock){
+        super(3, 20, 50, 30, momentProd, clock);
         this.tempsFabrication[0]=8;
         this.tempsFabrication[1]=14;
         this.tempsFabrication[2]=18;

@@ -5,6 +5,8 @@
  */
 package resto.sandwich;
 
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
@@ -12,8 +14,8 @@ package resto.sandwich;
 public class Kebab extends Sandwich{
     private int[] tempsFabrication= new int[prodSimultMax];
 
-    public Kebab(long momentProd){
-        super(2, 30, 60, 30, momentProd);
+    public Kebab(long momentProd, SimulationClock clock){
+        super(2, 30, 60, 30, momentProd, clock);
         this.tempsFabrication[0]=10;
         this.tempsFabrication[1]=15;
         this.nom="Kebab";

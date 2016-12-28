@@ -5,6 +5,8 @@
  */
 package resto.sandwich;
 
+import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
+
 /**
  *
  * @author Sylvain HURAUX <your.name at your.org>
@@ -14,14 +16,17 @@ public class Sandwich {
     protected int coutFabrication, prixVente;
     long tempsPeremption, momentProd;
     protected String nom;
+    protected SimulationClock clock;
     
-    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long tempsPeremption, long momentProd){
+    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long tempsPeremption, long momentProd,
+            SimulationClock clock){
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
         this.tempsPeremption=tempsPeremption;
         this.momentProd=momentProd;
         this.prodSimultMax=prodSimultMax;
         this.nom="sandwich";
+        this.clock=clock;
     }
 
     /**
@@ -31,4 +36,10 @@ public class Sandwich {
         return nom;
     }
     
+    public boolean Perime(){
+        if(this.clock.getSimulationTimeEnUT()-momentProd>tempsPeremption){
+            return true;    //le sw est périmé
+        }
+        else return false;  //sw pas encore périmé
+    }
 }

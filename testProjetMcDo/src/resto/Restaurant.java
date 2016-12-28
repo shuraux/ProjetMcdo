@@ -27,7 +27,7 @@ public class Restaurant {
     public static void main(String[] args) {
         SimulationClock clock = new SimulationClock(100);
         List<PointFLM> flmp = Arrays.asList(new PointFLM[]{
-            new PointFLM(0, 20/3600.0),  // 1 clients par heure
+            new PointFLM(0, 60/3600.0),  // 1 clients par heure
             new PointFLM(3600, 40/3600.0),
             new PointFLM(7200, 30/3600.0),
             new PointFLM(10800, 60/3600.0),

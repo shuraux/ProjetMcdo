@@ -25,12 +25,12 @@ public class Producteur extends Employe implements Runnable{
     }
     
     public synchronized Kebab prodKebab(){
-        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT());
+        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
         return kb;
     }
     
     public synchronized Burger prodBurger(){
-        Burger bg = new Burger(this.clock.getSimulationTimeEnUT());
+        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
         return bg;
     }
     
