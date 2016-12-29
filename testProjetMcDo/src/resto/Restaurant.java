@@ -18,7 +18,7 @@ import java.util.List;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
-    private static final int nbrCaisses=3, nbrEmployes=3;
+    private static final int nbrCaisses=2, nbrEmployes=3;
     private final static ArrayList<PassePlat> listePp = new ArrayList();
     
     public static void main(String[] args) {
