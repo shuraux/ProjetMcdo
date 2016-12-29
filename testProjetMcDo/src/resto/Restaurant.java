@@ -46,8 +46,8 @@ public class Restaurant {
             listePp.add(new PassePlat(i+1, file, clock));
         }
         
-        Employe employe1 = new Employe(1, stock, listePp, file.getFile(), 3, clock,1);
-        Employe employe2 = new Employe(2, stock, listePp, file.getFile(), 3, clock, 2);
+        Employe employe1 = new Employe(1, stock, listePp, file.getFile(), 3, clock,0);
+        Employe employe2 = new Employe(2, stock, listePp, file.getFile(), 3, clock, 0);
         Employe employe3 = new Employe(3, stock, listePp, file.getFile(), 3, clock, 0);
         Thread e1 = new Thread(employe1);
         Thread e2 = new Thread(employe2);

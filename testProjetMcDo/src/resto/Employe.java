@@ -44,31 +44,40 @@ public class Employe implements Runnable{
                 System.out.println(this.clock.getSimulationTimeEnUT() + " :  L'employe n°" +
                         this.numero + " devient serveur");
                 service();
-                this.role=0;
-                /*synchronized(this.stock){
-                    try {
-                        System.out.println("passage dans sync stock par n°" + this.numero);
-                        this.stock.wait();
-                        this.role=2;
-                    } catch (InterruptedException ex){
-                    }
-                }*/
+                if(this.file.size()>1 && this.stock.getListeSandwichs().size()>5){  //si file + longue que 1 et stock + grd que 10
+                    this.role=1;    //reste serveur
+                }
+                else if(this.file.size()<1 && this.stock.getListeSandwichs().size()>5){  //si file inf à 1 et stock sup à 10
+                    this.role=0;    //pause
+                }
+                else this.role=2;   //passe en prod
             }
             
             while(this.role==2){
                 System.out.println(this.clock.getSimulationTimeEnUT() + " :  L'employe n°" +
-                                this.numero + " devient producteur");
+                        this.numero + " devient producteur");
                 production(2, prodKebab());
                 production(3, prodBurger());
-                //this.role=0;
+                if(this.stock.getListeSandwichs().size()<5 && this.file.size()<1){   //si stock inf à 10 et file inf à 2
+                    this.role=2;    //reste prod
+                }
+                else if(this.stock.getListeSandwichs().size()>5 && this.file.size()<1){  //si stock sup à 10 et file inf à 2
+                    this.role=0;        //pause
+                }
+                else this.role=1;       //devient serveur
             }
        
             while(this.role==0){
                 synchronized(this.file){
                     try {
-                        //System.out.println(this.clock.getSimulationTimeEnUT() + " : Passage dans sync queue par n°" + this.numero);
                         this.file.wait();
-                        this.role=1;        //lorsqu'un nouveau client arrive dans la file un employe en attente devient serveur
+                        if(this.file.size()>1){
+                            this.role=1;        //devient serv
+                        }
+                        if(this.stock.getListeSandwichs().size()<10){
+                            this.role=2;        // devient prod
+                        }
+                        //else this.role=0;
                     } catch (InterruptedException ex){
                     }
                 }
@@ -178,7 +187,8 @@ public class Employe implements Runnable{
             this.clock.metEnAttente(this.tempsServiceEnUT);
         } catch (InterruptedException ex) {
         }
-        client = this.listePp.get(choixPp).retirerClient();
+        //client = this.listePp.get(choixPp).retirerClient();
+        System.out.println(this.clock.getSimulationTimeEnUT() + " : Client N°" + client + " retiré par employé n°" + this.numero);
         commande=this.listePp.get(choixPp).convertirCommande(client); //on convertit la commande tab en ArrayList
         remplirCommande(choixPp);                  //on parcourt la liste de commande et on add les sw au pp
                         

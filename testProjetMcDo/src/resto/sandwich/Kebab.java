@@ -15,7 +15,7 @@ public class Kebab extends Sandwich{
     private int[] tempsFabrication= new int[prodSimultMax];
 
     public Kebab(long momentProd, SimulationClock clock){
-        super(2, 30, 60, 30, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente, tempsPeremption
+        super(2, 30, 60, 100, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente, tempsPeremption
         this.tempsFabrication[0]=10;
         this.tempsFabrication[1]=15;
         this.nom="Kebab";
