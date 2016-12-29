@@ -10,6 +10,7 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 import fr.insa.beuvron.cours.melOptimisation.utils.FonctionLineaireParMorceaux;
 import fr.insa.beuvron.cours.melOptimisation.utils.PointFLM;
 import fr.insa.beuvron.cours.multiTache.projets.resto.FileAttenteClients;
+import java.time.chrono.ThaiBuddhistChronology;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,13 +21,15 @@ import java.util.List;
 public class Restaurant {
     private static final int nbrCaisses=2, nbrEmployes=3;
     private final static ArrayList<PassePlat> listePp = new ArrayList();
+    private static Employe[] tabEmployes=new Employe[nbrEmployes];
+    private static Thread[] tabThreads=new Thread[nbrEmployes];
     
     public static void main(String[] args) {
-        SimulationClock clock = new SimulationClock(70);
+        SimulationClock clock = new SimulationClock(10);
         List<PointFLM> flmp = Arrays.asList(new PointFLM[]{
-            new PointFLM(0, 60/3600.0),  // 20 clients par heure
-            new PointFLM(3600, 60/3600.0),
-            new PointFLM(7200, 60/3600.0),
+            new PointFLM(0, 20/3600.0),  // 20 clients par heure
+            new PointFLM(3600, 40/3600.0),
+            new PointFLM(7200, 30/3600.0),
             new PointFLM(10800, 60/3600.0),
             new PointFLM(14400, 0.0),});
         
@@ -46,18 +49,13 @@ public class Restaurant {
             listePp.add(new PassePlat(i+1, file, clock));
         }
         
-        Employe employe1 = new Employe(1, stock, listePp, file.getFile(), 3, clock,0);
-        Employe employe2 = new Employe(2, stock, listePp, file.getFile(), 3, clock, 0);
-        Employe employe3 = new Employe(3, stock, listePp, file.getFile(), 3, clock, 0);
-        Thread e1 = new Thread(employe1);
-        Thread e2 = new Thread(employe2);
-        Thread e3 = new Thread(employe3);
-        
         file.start();
         
-        e1.start();
-        e2.start();
-        e3.start();
+        for(int i=0; i<nbrEmployes; i++){
+            tabEmployes[i]=new Employe(i, stock, listePp, file.getFile(), 3, clock, 0);
+            tabThreads[i]=new Thread(tabEmployes[i]);
+            tabThreads[i].start();
+        }
         
         clock.start();
     }

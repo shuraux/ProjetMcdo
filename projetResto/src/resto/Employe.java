@@ -44,10 +44,10 @@ public class Employe implements Runnable{
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" +
                         this.numero + " devient serveur");
                 service();
-                if(this.file.size()>1 && this.stock.getListeSandwichs().size()>5){  //si file + longue que 1 et stock + grd que 10
+                if(this.file.size()>1 && this.stock.getListeSandwichs().size()>5){  //si file + longue que 1 et stock + grd que 5
                     this.role=1;    //reste serveur
                 }
-                else if(this.file.size()<1 && this.stock.getListeSandwichs().size()>5){  //si file inf à 1 et stock sup à 10
+                else if(this.file.size()<1 && this.stock.getListeSandwichs().size()>5){  //si file inf à 1 et stock sup à 5
                     this.role=0;    //pause
                 }
                 else this.role=2;   //passe en prod
@@ -56,12 +56,14 @@ public class Employe implements Runnable{
             while(this.role==2){
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" +
                         this.numero + " devient producteur");
-                production(2, prodKebab());
-                production(3, prodBurger());
-                if(this.stock.getListeSandwichs().size()<5 && this.file.size()<1){   //si stock inf à 10 et file inf à 2
+                int[] choix = new int[2];
+                choix=choixQte();
+                production(choix[0], prodKebab());
+                production(choix[1], prodBurger());
+                if(this.stock.getListeSandwichs().size()<5 && this.file.size()<1){   //si stock inf à 5 et file inf à 2
                     this.role=2;    //reste prod
                 }
-                else if(this.stock.getListeSandwichs().size()>5 && this.file.size()<1){  //si stock sup à 10 et file inf à 2
+                else if(this.stock.getListeSandwichs().size()>5 && this.file.size()<1){  //si stock sup à 5 et file inf à 2
                     this.role=0;        //pause
                 }
                 else this.role=1;       //devient serveur
@@ -123,6 +125,27 @@ public class Employe implements Runnable{
     public synchronized Burger prodBurger(){
         Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
         return bg;
+    }
+    public synchronized int[] choixQte(){
+        int[] choix = new int[2];
+        choix[0]=0;
+        choix[1]=0;
+        if(this.stock.getNbrKebabs()<2){
+            choix[0]=2;
+        }
+        else if(this.stock.getNbrKebabs()>=2){
+            choix[0]=1;
+        }
+        if(this.stock.getNbrBurgers()<3){
+            choix[1]=3;
+        }
+        else if(3<=this.stock.getNbrBurgers() && this.stock.getNbrBurgers()<6){
+            choix[1]=2;
+        }
+        else if(6<=this.stock.getNbrBurgers()){
+            choix[1]=1;
+        }
+        return choix;
     }
     
     //méthodes liées au service
