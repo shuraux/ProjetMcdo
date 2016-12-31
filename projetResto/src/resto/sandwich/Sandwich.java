@@ -18,11 +18,11 @@ public class Sandwich {
     protected String nom;
     protected SimulationClock clock;
     
-    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long tempsPeremption, long momentProd,
+    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long momentProd,
             SimulationClock clock){
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
-        this.tempsPeremption=tempsPeremption;
+        this.tempsPeremption=100;
         this.momentProd=momentProd;
         this.prodSimultMax=prodSimultMax;
         this.nom="sandwich";

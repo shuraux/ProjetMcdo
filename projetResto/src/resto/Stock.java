@@ -21,14 +21,14 @@ public class Stock {
     //private List<Sandwich> listeSandwichs = Collections.synchronizedList(new ArrayList<Sandwich>());
     private final ArrayList<Sandwich> listeSandwichs;
     private final int stockMax=100;
-    private boolean posAjout, posRetir;
+    private boolean posAjout, posRetrait;
     private final int dureeChargement=4, dureeDechargement=3;
     private final SimulationClock clock;
     
     public Stock(SimulationClock clock){
         this.listeSandwichs = new ArrayList<>();
         this.posAjout = true;
-        this.posRetir = true;
+        this.posRetrait = true;
         this.clock = clock;
     }
 
@@ -70,7 +70,7 @@ public class Stock {
     public synchronized Sandwich retirerSandwich(Sandwich sw){
         Sandwich sandwichRetire=null;
         
-        while (this.listeSandwichs.size() <= 0 || this.isPosRetir()==false) {   //tant que le stock est vide
+        while (this.listeSandwichs.size() <= 0 || this.isPosRetrait()==false) {   //tant que le stock est vide
             if(this.listeSandwichs.size() <= 0){
                 try {
                     System.out.println(this.clock.getSimulationTimeEnUT() + " : Impossible de retirer : Stock vide");
@@ -84,7 +84,7 @@ public class Stock {
                     throw new Error("pas d'interrupt dans cet exemple");
                 }
             }
-            else if(this.isPosRetir()==false){
+            else if(this.isPosRetrait()==false){
                 try {
                     System.out.println(this.clock.getSimulationTimeEnUT() +
                             " : Impossible de retirer : un autre serveur retire actuellement");
@@ -101,14 +101,14 @@ public class Stock {
                     for (int i=0; i<this.listeSandwichs.size(); i++){
                         if(this.listeSandwichs.get(i) instanceof Burger && retire==false){   //si l'element checké est un Burger et qu'on n'en a pas déjà retiré un
                             sandwichRetire=this.listeSandwichs.get(i);      //on récup le sandwich à mettre dans le passe plat
-                            this.setPosRetir(false);
+                            this.setPosRetrait(false);
                             try {
                                 this.clock.metEnAttente(dureeDechargement);      //sleep qui représente la durée pour décharger
                             } catch (InterruptedException ex) {
                                 throw new Error("pas d'interrupt dans cet exemple");
                             }
                             this.listeSandwichs.remove(i);                  //on l'enlève
-                            this.setPosRetir(true);
+                            this.setPosRetrait(true);
                             //System.out.println(this.clock.getSimulationTimeEnUT() + " : Burger déchargé");
                             retire=true;                                    //on sort du while
                         }
@@ -132,14 +132,14 @@ public class Stock {
                     for (int i=0; i<this.listeSandwichs.size(); i++){
                         if(this.listeSandwichs.get(i) instanceof Kebab && retire==false){   //si l'element checké est un Burger et qu'on n'en a pas déjà retiré un
                             sandwichRetire=this.listeSandwichs.get(i);      //on récup le sandwich à mettre dans le passe plat
-                            this.setPosRetir(false);
+                            this.setPosRetrait(false);
                             try {
                                 this.clock.metEnAttente(dureeDechargement);      //sleep qui représente la durée pour décharger
                             } catch (InterruptedException ex) {
                                 throw new Error("pas d'interrupt dans cet exemple");
                             }
                             this.listeSandwichs.remove(i);                  //on l'enlève
-                            this.setPosRetir(true);
+                            this.setPosRetrait(true);
                             //System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab déchargé");
                             retire=true;                                    //on sort du while
                         }
@@ -212,11 +212,11 @@ public class Stock {
     public void setPosAjout(boolean posAjout) {
         this.posAjout = posAjout;
     }
-    public boolean isPosRetir() {
-        return posRetir;
+    public boolean isPosRetrait() {
+        return posRetrait;
     }
-    public void setPosRetir(boolean posRetir) {
-        this.posRetir = posRetir;
+    public void setPosRetrait(boolean posRetrait) {
+        this.posRetrait = posRetrait;
     }
 
 }
