@@ -14,8 +14,8 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 public class Kebab extends Sandwich{
     private final int[] tempsFabrication= new int[prodSimultMax];
 
-    public Kebab(int i, long momentProd, SimulationClock clock){
-        super(i, 2, 30, 60, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente
+    public Kebab(long momentProd, SimulationClock clock){
+        super(2, 30, 60, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente
         this.tempsFabrication[0]=10;
         this.tempsFabrication[1]=15;
         this.nom="Kebab";

@@ -14,8 +14,8 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
 public class Burger extends Sandwich{   //correspond à s ds le sujet
     private final int[] tempsFabrication = new int[prodSimultMax];
 
-    public Burger(int i, long momentProd, SimulationClock clock){
-        super(i, 3, 20, 50, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente
+    public Burger(long momentProd, SimulationClock clock){
+        super(3, 20, 50, momentProd, clock);    //prodSimultMax, coutFabrication, prixVente
         this.tempsFabrication[0]=8;
         this.tempsFabrication[1]=14;
         this.tempsFabrication[2]=18;

@@ -27,7 +27,6 @@ public class Employe implements Runnable{
     private final FileAttenteClients fileAttente;
     private final ArrayBlockingQueue<Integer> file;
     private int role;   //0 : ne fait rien, 1 : sert, 2 : produit
-    private int compteurSw=1;
    
     public Employe(int numero, Stock stock, ArrayList<PassePlat> listePp, FileAttenteClients gestionFileAttente, ArrayBlockingQueue file, long tempsServiceEnUT,
             SimulationClock clock, int role){
@@ -130,15 +129,14 @@ public class Employe implements Runnable{
             System.out.println(this.clock.getSimulationTimeEnUT() + " : Il y a " +
                     stock.getNbrBurgers() + " burgers dans le stock");
         }
+        System.out.println("Le restaurant a produit en tout " + this.stock.getNbSwProduits() + " sandwichs.");
     }
     public synchronized Kebab prodKebab(){
-        Kebab kb = new Kebab(compteurSw, this.clock.getSimulationTimeEnUT(), clock);
-        compteurSw++;
+        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
         return kb;
     }
     public synchronized Burger prodBurger(){
-        Burger bg = new Burger(compteurSw, this.clock.getSimulationTimeEnUT(), clock);
-        compteurSw++;
+        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
         return bg;
     }
     public synchronized int[] choixQte(){
@@ -200,11 +198,11 @@ public class Employe implements Runnable{
         for(int i=0; i<res.length; i++){
             if(res[i]==0){
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
-                commande.add(new Kebab(res[i],this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
+                commande.add(new Kebab(this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
             }
             else {
             System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
-            commande.add(new Burger(res[i], this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
+            commande.add(new Burger(this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
             }
         }
         return commande;
@@ -220,8 +218,7 @@ public class Employe implements Runnable{
                 if(swStock.Perime()==true){      //si le sw retiré est périmé
                     this.stock.setNbSwJetes(this.stock.getNbSwJetes()+1);   //il faut comptabiliser le sw retiré juste au-dessus.
                     this.stock.setPosRetrait(false);
-                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab (SW n°" +
-                            swStock.getNumero() + ") périmé détecté par l'employé n°" +
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab  périmé détecté par l'employé n°" +
                             this.numero + ". Il est jeté. Il reste " + this.stock.getNbrKebabs()+ " kebabs dans le stock");
                     this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
                     System.out.println(this.clock.getSimulationTimeEnUT() +" : Le restaurant a jeté en tout " +
@@ -241,8 +238,7 @@ public class Employe implements Runnable{
                 if(swStock.Perime()==true){      //si le sw retiré est périmé
                     this.stock.setNbSwJetes(this.stock.getNbSwJetes()+1);   //il faut comptabiliser le sw retiré juste au-dessus.
                     this.stock.setPosRetrait(false);
-                    System.out.println(this.clock.getSimulationTimeEnUT() + " : burger (SW n°" +
-                            swStock.getNumero() + ") périmé détecté par l'employé n°" +
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : burger périmé détecté par l'employé n°" +
                             this.numero + ". Il est jeté. Il reste " + this.stock.getNbrBurgers() + " burgers dans le stock");
                     this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
                     System.out.println(this.clock.getSimulationTimeEnUT() +" : Le restaurant a jeté en tout " +

@@ -25,6 +25,7 @@ public class Stock {
     private final int dureeChargement=4, dureeDechargement=3;
     private final SimulationClock clock;
     private int gainOuPerte;
+    private int nbSwProduits;
     private int nbSwJetes;
     
     public Stock(SimulationClock clock){
@@ -33,6 +34,7 @@ public class Stock {
         this.posRetrait=true;
         this.clock = clock;
         this.gainOuPerte=0;
+        this.nbSwProduits=0;
         this.nbSwJetes=0;
     }
 
@@ -64,6 +66,7 @@ public class Stock {
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         this.listeSandwichs.add(sw);        //on add le sw au stock
+        this.setNbSwProduits(this.getNbSwProduits()+1);
         this.setGainOuPerte(this.gainOuPerte-sw.getCoutFabrication());  //a chaque fois q'un sw est créé et add au stock on enlève le cout de fab des gains totaux
         System.out.println(this.clock.getSimulationTimeEnUT() + " : " + sw.getNom() + " ajouté au stock");
         this.setPosAjout(true);                 //on réouvre la possiblité de charger
@@ -175,7 +178,7 @@ public class Stock {
                                 " périmé. Il est jeté.  Il reste " + this.getNbrBurgers()+" burgers dans le stock");
                     }
                     this.listeSandwichs.remove(i);              //on l'enlève de la liste
-                    this.nbSwJetes++;
+                    this.setNbSwJetes(this.getNbSwJetes() + 1);
                 }
             }
         }
@@ -241,6 +244,20 @@ public class Stock {
      */
     public void setNbSwJetes(int nbSwJetes) {
         this.nbSwJetes = nbSwJetes;
+    }
+
+    /**
+     * @return the nbSwProduits
+     */
+    public int getNbSwProduits() {
+        return nbSwProduits;
+    }
+
+    /**
+     * @param nbSwProduits the nbSwProduits to set
+     */
+    public void setNbSwProduits(int nbSwProduits) {
+        this.nbSwProduits = nbSwProduits;
     }
 
 }

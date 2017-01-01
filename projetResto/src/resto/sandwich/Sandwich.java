@@ -12,7 +12,6 @@ import fr.insa.beuvron.cours.multiTache.utils.SimulationClock;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Sandwich {
-    private int numero;
     protected int prodSimultMax;
     private final int coutFabrication;
     private final int prixVente;
@@ -20,9 +19,8 @@ public class Sandwich {
     protected String nom;
     protected SimulationClock clock;
     
-    public Sandwich(int i, int prodSimultMax, int coutFabrication, int prixVente, long momentProd,
+    public Sandwich(int prodSimultMax, int coutFabrication, int prixVente, long momentProd,
             SimulationClock clock){
-        this.numero=i;
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
         this.tempsPeremption=100;
@@ -51,10 +49,4 @@ public class Sandwich {
         return prixVente;
     }
 
-    /**
-     * @return the numero
-     */
-    public int getNumero() {
-        return numero;
-    }
 }
