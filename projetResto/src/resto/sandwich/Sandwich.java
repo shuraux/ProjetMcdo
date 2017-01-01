@@ -23,7 +23,7 @@ public class Sandwich {
             SimulationClock clock){
         this.coutFabrication=coutFabrication;
         this.prixVente=prixVente;
-        this.tempsPeremption=100;
+        this.tempsPeremption=300;
         this.momentProd=momentProd;
         this.prodSimultMax=prodSimultMax;
         this.nom="sandwich";

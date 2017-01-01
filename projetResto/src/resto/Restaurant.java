@@ -18,7 +18,7 @@ import java.util.List;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
-    private static final int nbrCaisses=3, nbrEmployes=5;
+    private static final int nbrCaisses=2, nbrEmployes=5;
     private static final ArrayList<PassePlat> listePp = new ArrayList();
     private static Employe[] tabEmployes=new Employe[(nbrEmployes+1)];    //+1 pr avoir des employés de 1 à n et pas 0 à n-1
     private static Thread[] tabThreads=new Thread[nbrEmployes+1];

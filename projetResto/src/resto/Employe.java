@@ -101,7 +101,7 @@ public class Employe implements Runnable{
     
     //méthodes liées à la production
     public synchronized void production(int nombre, Sandwich sw){
-        if(sw instanceof Kebab){
+        if(sw instanceof Kebab && nombre!=0){
             try {
                 this.clock.metEnAttente(prodKebab().getTempsFabrication()[nombre-1]);
             } catch (InterruptedException ex) {
@@ -115,7 +115,7 @@ public class Employe implements Runnable{
             System.out.println(this.clock.getSimulationTimeEnUT() + " : Il y a " +
                     stock.getNbrKebabs() + " kebabs dans le stock");
         }
-        else if(sw instanceof Burger){
+        else if(sw instanceof Burger && nombre!=0){
             try {
                 this.clock.metEnAttente(prodBurger().getTempsFabrication()[nombre-1]);
             } catch (InterruptedException ex) {
@@ -129,7 +129,8 @@ public class Employe implements Runnable{
             System.out.println(this.clock.getSimulationTimeEnUT() + " : Il y a " +
                     stock.getNbrBurgers() + " burgers dans le stock");
         }
-        System.out.println("Le restaurant a produit en tout " + this.stock.getNbSwProduits() + " sandwichs.");
+        System.out.println(this.clock.getSimulationTimeEnUT() +
+                " : Le restaurant a produit en tout " + this.stock.getNbSwProduits() + " sandwichs.");
     }
     public synchronized Kebab prodKebab(){
         Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
@@ -143,20 +144,26 @@ public class Employe implements Runnable{
         int[] choix = new int[2];
         choix[0]=0;
         choix[1]=0;
-        if(this.stock.getNbrKebabs()<2){
+        if(this.stock.getNbrKebabs()==0){
             choix[0]=2;
         }
-        else if(this.stock.getNbrKebabs()>=2){
+        else if(this.stock.getNbrKebabs()>0 && this.stock.getNbrKebabs()<3){
             choix[0]=1;
         }
-        if(this.stock.getNbrBurgers()<3){
+        else {
+            choix[0]=0;
+        }
+        if(this.stock.getNbrBurgers()==0){
             choix[1]=3;
         }
-        else if(3<=this.stock.getNbrBurgers() && this.stock.getNbrBurgers()<6){
+        else if(this.stock.getNbrBurgers()>0 && this.stock.getNbrBurgers()<3){
             choix[1]=2;
         }
-        else if(6<=this.stock.getNbrBurgers()){
+        else if(this.stock.getNbrBurgers()>2 && this.stock.getNbrBurgers()<5){
             choix[1]=1;
+        }
+        else {
+            choix[1]=0;
         }
         return choix;
     }

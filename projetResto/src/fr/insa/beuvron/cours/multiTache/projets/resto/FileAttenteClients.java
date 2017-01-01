@@ -88,11 +88,11 @@ public class FileAttenteClients {
         }
         if (this.isTrace()) {
             if (ok) {
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client n°" +
                         (this.numNextClient) + " entre dans file ("+this.getFile().size()+" clients)");
                 System.out.flush();
             } else {
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client " +
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : " +"client n°" +
                         (this.numNextClient) + " trouve trop de monde("+this.getFile().size()+" clients)");
                 System.out.flush();
             }
