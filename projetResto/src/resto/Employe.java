@@ -27,6 +27,7 @@ public class Employe implements Runnable{
     private final FileAttenteClients fileAttente;
     private final ArrayBlockingQueue<Integer> file;
     private int role;   //0 : ne fait rien, 1 : sert, 2 : produit
+    private int compteurSw=1;
    
     public Employe(int numero, Stock stock, ArrayList<PassePlat> listePp, FileAttenteClients gestionFileAttente, ArrayBlockingQueue file, long tempsServiceEnUT,
             SimulationClock clock, int role){
@@ -42,19 +43,25 @@ public class Employe implements Runnable{
    
     @Override
     public synchronized void run(){
-        int gestionFile=1, gestionStock=5;
+        int gestionFile=1, gestionStock=0;
         while(true){
             while (this.role==1) {
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" +
                         (this.numero) + " devient serveur");
-                service();
-                if(this.file.size()>gestionFile && this.stock.getListeSandwichs().size()>gestionStock){  //si file + longue que 1 et stock + grd que 5
-                    this.role=1;    //reste serveur
+                int choixPp=choixPp();
+                if(choixPp==42){    //si pas de pp dispo
+                    this.role=2;    //on met l'employé à la prod
                 }
-                else if(this.file.size()<gestionFile && this.stock.getListeSandwichs().size()>gestionStock){  //si file inf à 1 et stock sup à 5
-                    this.role=0;    //pause
+                else{   //sinon
+                    service(choixPp);
+                    if(this.file.size()>gestionFile && this.stock.getListeSandwichs().size()>gestionStock){  //si file + longue que 1 et stock + grd que 5
+                        this.role=1;    //reste serveur
+                    }
+                    else if(this.file.size()<gestionFile && this.stock.getListeSandwichs().size()>gestionStock){  //si file inf à 1 et stock sup à 5
+                        this.role=0;    //pause
+                    }
+                    else this.role=2;   //passe en prod
                 }
-                else this.role=2;   //passe en prod
             }
             
             while(this.role==2){
@@ -82,7 +89,7 @@ public class Employe implements Runnable{
                         if(this.file.size()>gestionFile){
                             this.role=1;        //devient serv
                         }
-                        if(this.stock.getListeSandwichs().size()<5){
+                        if(this.stock.getListeSandwichs().size()<2){
                             this.role=2;        // devient prod
                         }
                         //else this.role=0;
@@ -125,11 +132,13 @@ public class Employe implements Runnable{
         }
     }
     public synchronized Kebab prodKebab(){
-        Kebab kb = new Kebab(this.clock.getSimulationTimeEnUT(), clock);
+        Kebab kb = new Kebab(compteurSw, this.clock.getSimulationTimeEnUT(), clock);
+        compteurSw++;
         return kb;
     }
     public synchronized Burger prodBurger(){
-        Burger bg = new Burger(this.clock.getSimulationTimeEnUT(), clock);
+        Burger bg = new Burger(compteurSw, this.clock.getSimulationTimeEnUT(), clock);
+        compteurSw++;
         return bg;
     }
     public synchronized int[] choixQte(){
@@ -155,33 +164,35 @@ public class Employe implements Runnable{
     }
     
     //méthodes liées au service
-    public synchronized void service(){
-        int choixPp=choixPp();
-        Integer client = this.retirerClient();
-        if (client == null) {
-            System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" + (this.numero)
-                    + " n'a plus de client");
-            synchronized(this.file){
-                try {
-                    this.file.wait();
-                } catch (InterruptedException ex){
+    public synchronized void service(int choixPp){
+        if(choixPp!=42){    //tjrs vrai en fait
+            Integer client = this.retirerClient();
+            if (client == null) {
+                System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" + (this.numero)
+                        + " n'a plus de client");
+                synchronized(this.file){
+                    try {
+                        this.file.wait();
+                    } catch (InterruptedException ex){
+                    }
                 }
             }
+            try {
+                this.clock.metEnAttente(this.tempsServiceEnUT);
+            } catch (InterruptedException ex) {
+            }
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employé n°" + this.numero +
+                    " prend la commande du client n°" + client);
+            commande=this.convertirCommande(client); //on convertit la commande tab en ArrayList
+            remplirCommande(choixPp);                  //on parcourt la liste de commande et on add les sw au 
+            this.stock.setGainOuPerte(this.stock.getGainOuPerte()+this.listePp.get(choixPp).getValeurCommande());
+            this.listePp.get(choixPp).setValeurCommande(0);    //la commande est finie donc on réinitialise la valeur de la commande
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" + (this.numero) +
+                    " sert le client n°" + client + ". Le gain actuel est de " + this.stock.getGainOuPerte() + "\n");
+            commande.clear();
+            this.listePp.get(choixPp).setOccupe(false);
+            //this.notify();
         }
-        try {
-            this.clock.metEnAttente(this.tempsServiceEnUT);
-        } catch (InterruptedException ex) {
-        }
-        System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employé n°" + this.numero +
-                " prend la commande du client n°" + client);
-        commande=this.convertirCommande(client); //on convertit la commande tab en ArrayList
-        remplirCommande(choixPp);                  //on parcourt la liste de commande et on add les sw au pp
-                        
-        System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" + (this.numero) +
-                " sert le client n°" + client + "\n");
-        commande.clear();
-        this.listePp.get(choixPp).setOccupe(false);
-        //this.notify();   
     }
     public synchronized ArrayList<Sandwich> convertirCommande(Integer client){  //va convertir la commande numéro par des sw
         ArrayList<Sandwich> commande = new ArrayList();
@@ -189,11 +200,11 @@ public class Employe implements Runnable{
         for(int i=0; i<res.length; i++){
             if(res[i]==0){
                 System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un kebab");
-                commande.add(new Kebab(this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
+                commande.add(new Kebab(res[i],this.clock.getSimulationTimeEnUT(), clock));      //on convertit un 0 en kebab
             }
             else {
             System.out.println(this.clock.getSimulationTimeEnUT() + " : Le client n°" + client + " veut un burger");
-            commande.add(new Burger(this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
+            commande.add(new Burger(res[i], this.clock.getSimulationTimeEnUT(), clock));     //et un 1 en burger
             }
         }
         return commande;
@@ -207,9 +218,14 @@ public class Employe implements Runnable{
             if(swCommande instanceof Kebab){   //si sw pas périmé on ajoute le sw au pp et on augmente i  
                 Sandwich swStock=this.stock.retirerSandwich(swCommande);
                 if(swStock.Perime()==true){      //si le sw retiré est périmé
+                    this.stock.setNbSwJetes(this.stock.getNbSwJetes()+1);   //il faut comptabiliser le sw retiré juste au-dessus.
                     this.stock.setPosRetrait(false);
-                    System.out.println(this.clock.getSimulationTimeEnUT() + " : kebab périmé détecté");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : Kebab (SW n°" +
+                            swStock.getNumero() + ") périmé détecté par l'employé n°" +
+                            this.numero + ". Il est jeté. Il reste " + this.stock.getNbrKebabs()+ " kebabs dans le stock");
                     this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
+                    System.out.println(this.clock.getSimulationTimeEnUT() +" : Le restaurant a jeté en tout " +
+                            this.stock.getNbSwJetes() + " Sandwichs.");
                     this.stock.setPosRetrait(true);
                 }
                 else {
@@ -223,9 +239,14 @@ public class Employe implements Runnable{
             else if(swCommande instanceof Burger){
                 Sandwich swStock=this.stock.retirerSandwich(swCommande);
                 if(swStock.Perime()==true){      //si le sw retiré est périmé
+                    this.stock.setNbSwJetes(this.stock.getNbSwJetes()+1);   //il faut comptabiliser le sw retiré juste au-dessus.
                     this.stock.setPosRetrait(false);
-                    System.out.println(this.clock.getSimulationTimeEnUT() + " : burger périmé détecté");
+                    System.out.println(this.clock.getSimulationTimeEnUT() + " : burger (SW n°" +
+                            swStock.getNumero() + ") périmé détecté par l'employé n°" +
+                            this.numero + ". Il est jeté. Il reste " + this.stock.getNbrBurgers() + " burgers dans le stock");
                     this.stock.jeterSandwichs();    //on appelle la méthode qui va check tous les sw et les jeter si necess
+                    System.out.println(this.clock.getSimulationTimeEnUT() +" : Le restaurant a jeté en tout " +
+                            this.stock.getNbSwJetes() + " Sandwichs.");
                     this.stock.setPosRetrait(true);
                 }
                 else {
@@ -244,28 +265,23 @@ public class Employe implements Runnable{
     }
     
     public synchronized int choixPp(){
-        int choixPp=100;    
+        int choixPp=42;    
         for(int i=this.listePp.size()-1; i>=0; i--){        //on parcourt les pp du dernier au premier
             if(!this.listePp.get(i).isOccupe()){    //si le pp est vide
                 choixPp=i;      // on le select, du coup on aura le plus petit possible à la fin du for
             }
         }
-        if(choixPp!=100){
+        if(choixPp!=42){    //si un pp a été selectionné
             this.listePp.get(choixPp).setOccupe(true);
             System.out.println(this.clock.getSimulationTimeEnUT() + " : L'employe n°" + (this.numero) + 
                     " se rend sur le passe-plat n°" + this.listePp.get(choixPp).getNumero());
             return choixPp;
         }
-        else {
-            try{
-                System.out.println(this.clock.getSimulationTimeEnUT() + " : Pas de passe-plat disponible pour l'employe n°" +
-                        this.numero);
-                this.wait();
-            } catch(InterruptedException ex){
-            }
+        else {  //sinon on renvoie 42
+            System.out.println(this.clock.getSimulationTimeEnUT() + " : Pas de passe-plat disponible pour l'employe n°" +
+                    this.numero);
+            return choixPp;
         }
-        System.out.println("pas normal");
-        return 1000;
     }
     
     public int getRole() {

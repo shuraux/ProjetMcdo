@@ -18,13 +18,13 @@ import java.util.List;
  * @author Sylvain HURAUX <your.name at your.org>
  */
 public class Restaurant {
-    private static final int nbrCaisses=2, nbrEmployes=3;
+    private static final int nbrCaisses=3, nbrEmployes=5;
     private static final ArrayList<PassePlat> listePp = new ArrayList();
     private static Employe[] tabEmployes=new Employe[(nbrEmployes+1)];    //+1 pr avoir des employés de 1 à n et pas 0 à n-1
     private static Thread[] tabThreads=new Thread[nbrEmployes+1];
     
     public static void main(String[] args) {
-        SimulationClock clock = new SimulationClock(2);
+        SimulationClock clock = new SimulationClock(1);
         List<PointFLM> flmp = Arrays.asList(new PointFLM[]{
             new PointFLM(0, 20/3600.0),  // 20 clients par heure
             new PointFLM(3600, 40/3600.0),

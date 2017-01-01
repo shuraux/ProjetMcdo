@@ -24,16 +24,19 @@ public class Stock {
     private boolean posAjout, posRetrait;
     private final int dureeChargement=4, dureeDechargement=3;
     private final SimulationClock clock;
+    private int gainOuPerte;
+    private int nbSwJetes;
     
     public Stock(SimulationClock clock){
-        this.listeSandwichs = new ArrayList<>();
-        this.posAjout = true;
-        this.posRetrait = true;
+        this.listeSandwichs=new ArrayList<>();
+        this.posAjout=true;
+        this.posRetrait=true;
         this.clock = clock;
+        this.gainOuPerte=0;
+        this.nbSwJetes=0;
     }
 
     public synchronized void ajouterSandwich(Sandwich sw){
-        //System.out.println("check entrée ajouterSandwich");
         while (this.getListeSandwichs().size()==getStockMax() || this.isPosAjout()==false){
             if(this.getListeSandwichs().size()==getStockMax()){ //si le stock est plein
                 try {
@@ -61,9 +64,9 @@ public class Stock {
                 throw new Error("pas d'interrupt dans cet exemple");
             }
         this.listeSandwichs.add(sw);        //on add le sw au stock
+        this.setGainOuPerte(this.gainOuPerte-sw.getCoutFabrication());  //a chaque fois q'un sw est créé et add au stock on enlève le cout de fab des gains totaux
         System.out.println(this.clock.getSimulationTimeEnUT() + " : " + sw.getNom() + " ajouté au stock");
         this.setPosAjout(true);                 //on réouvre la possiblité de charger
-        //System.out.println("check sortie ajouterSandwich");
         this.notifyAll();
         System.out.flush();
     } 
@@ -74,11 +77,6 @@ public class Stock {
             if(this.listeSandwichs.size() <= 0){
                 try {
                     System.out.println(this.clock.getSimulationTimeEnUT() + " : Impossible de retirer : Stock vide");
-                    /*synchronized(this){
-                        this.notify();  //on réveille un employé qui est serveur
-                        System.out.println(this.clock.getSimulationTimeEnUT() +
-                                " : notify de retirerSandwich exec");
-                    }*/
                     this.wait();                        //le thread va attendre
                 } catch (InterruptedException ex) {
                     throw new Error("pas d'interrupt dans cet exemple");
@@ -177,6 +175,7 @@ public class Stock {
                                 " périmé. Il est jeté.  Il reste " + this.getNbrBurgers()+" burgers dans le stock");
                     }
                     this.listeSandwichs.remove(i);              //on l'enlève de la liste
+                    this.nbSwJetes++;
                 }
             }
         }
@@ -217,6 +216,31 @@ public class Stock {
     }
     public void setPosRetrait(boolean posRetrait) {
         this.posRetrait = posRetrait;
+    }
+
+    public int getGainOuPerte() {
+        return gainOuPerte;
+    }
+
+    /**
+     * @param gainOuPerte the gainOuPerte to set
+     */
+    public void setGainOuPerte(int gainOuPerte) {
+        this.gainOuPerte = gainOuPerte;
+    }
+
+    /**
+     * @return the nbSwJetes
+     */
+    public int getNbSwJetes() {
+        return nbSwJetes;
+    }
+
+    /**
+     * @param nbSwJetes the nbSwJetes to set
+     */
+    public void setNbSwJetes(int nbSwJetes) {
+        this.nbSwJetes = nbSwJetes;
     }
 
 }
